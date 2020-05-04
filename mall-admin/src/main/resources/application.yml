@@ -67,6 +67,6 @@ minio:
 logging:
   level:
     root: info #日志配置DEBUG,INFO,WARN,ERROR
-    com.macro.mall: debug
+    com.mtcarpenter.mall: debug
 #  file: demo_log.log #配置日志生成路径
 #  path: /var/logs #配置日志文件名称
