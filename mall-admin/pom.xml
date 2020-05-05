@@ -43,7 +43,6 @@
         <dependency>
             <groupId>net.logstash.logback</groupId>
             <artifactId>logstash-logback-encoder</artifactId>
-            <version>5.2</version>
         </dependency>
         <dependency>
             <groupId>io.minio</groupId>
