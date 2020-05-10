@@ -1,3 +1,5 @@
+server:
+  port: 8085
 spring:
   application:
     name: mall-gateway
@@ -11,6 +13,8 @@ spring:
           # 是否与服务发现组件进行结合，通过 serviceId 转发到具体的服务实例。默认为false
           enabled: true
           lower-case-service-id: true #使用小写service-id
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials, RETAIN_UNIQUE
       globalcors:
         corsConfigurations:
           '[/**]':
@@ -20,6 +24,12 @@ spring:
             allowedOrigins: "*"
             allowedMethods: "*"
             allowedHeaders: "*"
-
-server:
-  port: 8085
+            allow-credentials: true
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: always
