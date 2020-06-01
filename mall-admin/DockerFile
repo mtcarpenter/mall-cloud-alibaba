@@ -1,8 +1,0 @@
-# 运行环境
-FROM   hub.c.163.com/library/java:8-alpine
-# 自动解压为目录
-ADD target/*.jar app.jar
-# 端口
-EXPOSE 8080
-# 运行指令
-ENTRYPOINT ["java","-jar","/app.jar"]

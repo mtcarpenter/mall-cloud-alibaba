@@ -1,9 +1,0 @@
-spring:
-  profiles:
-    active: dev #默认为开发环境
-  cloud:
-    nacos:
-      discovery:
-        server-addr: 127.0.0.1:8848
-  application:
-    name: mall-admin
