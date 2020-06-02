@@ -9,6 +9,11 @@
         <module>mall-security</module>
         <module>mall-gateway</module>
         <module>mall-admin-ums</module>
+        <module>mall-admin-cms</module>
+        <module>mall-admin-pms</module>
+        <module>mall-admin-oms</module>
+        <module>mall-admin-sms</module>
+        <module>mall-storage</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
