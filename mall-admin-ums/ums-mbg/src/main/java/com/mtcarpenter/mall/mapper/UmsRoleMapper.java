@@ -2,9 +2,8 @@ package com.mtcarpenter.mall.mapper;
 
 import com.mtcarpenter.mall.model.UmsRole;
 import com.mtcarpenter.mall.model.UmsRoleExample;
-import org.apache.ibatis.annotations.Param;
-
 import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface UmsRoleMapper {
     long countByExample(UmsRoleExample example);

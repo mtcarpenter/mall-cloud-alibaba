@@ -2,9 +2,8 @@ package com.mtcarpenter.mall.mapper;
 
 import com.mtcarpenter.mall.model.UmsPermission;
 import com.mtcarpenter.mall.model.UmsPermissionExample;
-import org.apache.ibatis.annotations.Param;
-
 import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface UmsPermissionMapper {
     long countByExample(UmsPermissionExample example);

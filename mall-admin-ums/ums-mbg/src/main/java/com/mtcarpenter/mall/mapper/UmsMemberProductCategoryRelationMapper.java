@@ -2,9 +2,8 @@ package com.mtcarpenter.mall.mapper;
 
 import com.mtcarpenter.mall.model.UmsMemberProductCategoryRelation;
 import com.mtcarpenter.mall.model.UmsMemberProductCategoryRelationExample;
-import org.apache.ibatis.annotations.Param;
-
 import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface UmsMemberProductCategoryRelationMapper {
     long countByExample(UmsMemberProductCategoryRelationExample example);

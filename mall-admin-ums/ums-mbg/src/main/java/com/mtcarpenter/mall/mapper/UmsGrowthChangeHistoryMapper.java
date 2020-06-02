@@ -2,9 +2,8 @@ package com.mtcarpenter.mall.mapper;
 
 import com.mtcarpenter.mall.model.UmsGrowthChangeHistory;
 import com.mtcarpenter.mall.model.UmsGrowthChangeHistoryExample;
-import org.apache.ibatis.annotations.Param;
-
 import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface UmsGrowthChangeHistoryMapper {
     long countByExample(UmsGrowthChangeHistoryExample example);

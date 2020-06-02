@@ -2,7 +2,6 @@ package com.mtcarpenter.mall.security.config;
 
 import com.mtcarpenter.mall.security.component.*;
 import com.mtcarpenter.mall.security.util.JwtTokenUtil;
-import com.mtcarpenter.mall.security.component.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Bean;

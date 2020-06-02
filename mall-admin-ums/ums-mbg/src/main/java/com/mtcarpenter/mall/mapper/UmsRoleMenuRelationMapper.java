@@ -2,9 +2,8 @@ package com.mtcarpenter.mall.mapper;
 
 import com.mtcarpenter.mall.model.UmsRoleMenuRelation;
 import com.mtcarpenter.mall.model.UmsRoleMenuRelationExample;
-import org.apache.ibatis.annotations.Param;
-
 import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface UmsRoleMenuRelationMapper {
     long countByExample(UmsRoleMenuRelationExample example);

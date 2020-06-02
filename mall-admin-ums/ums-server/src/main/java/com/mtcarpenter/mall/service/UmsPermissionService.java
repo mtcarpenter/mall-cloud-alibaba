@@ -18,7 +18,7 @@ public interface UmsPermissionService {
     /**
      * 修改权限
      */
-    int update(Long id,UmsPermission permission);
+    int update(Long id, UmsPermission permission);
 
     /**
      * 批量删除权限

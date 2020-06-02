@@ -11,5 +11,19 @@
 
     <artifactId>ums-mbg</artifactId>
 
-
+    <dependencies>
+        <dependency>
+            <groupId>com.mtcarpenter</groupId>
+            <artifactId>mall-common</artifactId>
+            <version>${mall.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mybatis.generator</groupId>
+            <artifactId>mybatis-generator-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+        </dependency>
+    </dependencies>
 </project>

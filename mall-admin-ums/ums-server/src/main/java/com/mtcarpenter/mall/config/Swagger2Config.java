@@ -37,7 +37,7 @@ public class Swagger2Config {
         return new ApiInfoBuilder()
                 .title("mall后台系统")
                 .description("mall后台模块")
-                .contact(new Contact("","",""))
+                .contact(new Contact("macro","",""))
                 .version("1.0")
                 .build();
     }

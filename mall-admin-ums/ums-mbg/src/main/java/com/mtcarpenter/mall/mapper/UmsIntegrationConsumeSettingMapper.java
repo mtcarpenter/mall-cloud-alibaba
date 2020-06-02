@@ -2,9 +2,8 @@ package com.mtcarpenter.mall.mapper;
 
 import com.mtcarpenter.mall.model.UmsIntegrationConsumeSetting;
 import com.mtcarpenter.mall.model.UmsIntegrationConsumeSettingExample;
-import org.apache.ibatis.annotations.Param;
-
 import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface UmsIntegrationConsumeSettingMapper {
     long countByExample(UmsIntegrationConsumeSettingExample example);

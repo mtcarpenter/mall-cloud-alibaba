@@ -2,9 +2,8 @@ package com.mtcarpenter.mall.mapper;
 
 import com.mtcarpenter.mall.model.UmsMemberTag;
 import com.mtcarpenter.mall.model.UmsMemberTagExample;
-import org.apache.ibatis.annotations.Param;
-
 import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface UmsMemberTagMapper {
     long countByExample(UmsMemberTagExample example);

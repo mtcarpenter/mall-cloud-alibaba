@@ -18,18 +18,7 @@
     </modules>
 
     <dependencies>
-        <dependency>
-            <groupId>com.mtcarpenter</groupId>
-            <artifactId>mall-common</artifactId>
-            <version>${mall.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.mtcarpenter</groupId>
-            <artifactId>mall-security</artifactId>
-            <version>${mall.version}</version>
-        </dependency>
+
     </dependencies>
-
-
 
 </project>

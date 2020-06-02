@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 public class AdminUserDetails implements UserDetails {
     private UmsAdmin umsAdmin;
     private List<UmsResource> resourceList;
-    public AdminUserDetails(UmsAdmin umsAdmin, List<UmsResource> resourceList) {
+    public AdminUserDetails(UmsAdmin umsAdmin,List<UmsResource> resourceList) {
         this.umsAdmin = umsAdmin;
         this.resourceList = resourceList;
     }

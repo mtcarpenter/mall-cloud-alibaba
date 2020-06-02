@@ -2,9 +2,8 @@ package com.mtcarpenter.mall.mapper;
 
 import com.mtcarpenter.mall.model.UmsMemberLoginLog;
 import com.mtcarpenter.mall.model.UmsMemberLoginLogExample;
-import org.apache.ibatis.annotations.Param;
-
 import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface UmsMemberLoginLogMapper {
     long countByExample(UmsMemberLoginLogExample example);

@@ -45,7 +45,7 @@ import java.util.stream.Collectors;
  */
 @Service
 public class UmsAdminServiceImpl implements UmsAdminService {
-    private static final Logger LOGGER = LoggerFactory.getLogger(com.mtcarpenter.mall.service.impl.UmsAdminServiceImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(UmsAdminServiceImpl.class);
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
     @Autowired

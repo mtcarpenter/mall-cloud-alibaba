@@ -2,9 +2,8 @@ package com.mtcarpenter.mall.mapper;
 
 import com.mtcarpenter.mall.model.UmsResourceCategory;
 import com.mtcarpenter.mall.model.UmsResourceCategoryExample;
-import org.apache.ibatis.annotations.Param;
-
 import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface UmsResourceCategoryMapper {
     long countByExample(UmsResourceCategoryExample example);

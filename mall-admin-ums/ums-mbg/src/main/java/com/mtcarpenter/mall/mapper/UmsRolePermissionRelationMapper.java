@@ -2,9 +2,8 @@ package com.mtcarpenter.mall.mapper;
 
 import com.mtcarpenter.mall.model.UmsRolePermissionRelation;
 import com.mtcarpenter.mall.model.UmsRolePermissionRelationExample;
-import org.apache.ibatis.annotations.Param;
-
 import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface UmsRolePermissionRelationMapper {
     long countByExample(UmsRolePermissionRelationExample example);
