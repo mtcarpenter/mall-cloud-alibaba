@@ -2,7 +2,9 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mtcarpenter.mall.dao.SmsFlashPromotionProductRelationDao">
     <resultMap id="flashProductMap" type="com.mtcarpenter.mall.dto.SmsFlashPromotionProduct" extends="com.mtcarpenter.mall.mapper.SmsFlashPromotionProductRelationMapper.BaseResultMap">
+<!--        @todo 微服务
         <association property="product" resultMap="com.mtcarpenter.mall.mapper.PmsProductMapper.BaseResultMap" columnPrefix="p_"/>
+  -->
     </resultMap>
     <select id="getList" resultMap="flashProductMap">
         SELECT

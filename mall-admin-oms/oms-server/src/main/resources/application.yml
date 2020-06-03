@@ -1,4 +1,5 @@
-
+server:
+  port: 8084
 spring:
   profiles:
     active: dev #默认为开发环境
@@ -53,5 +54,3 @@ logging:
     com.mtcarpenter.mall: debug
 #  file: demo_log.log #配置日志生成路径
 #  path: /var/logs #配置日志文件名称
-server:
-  port: 8083
