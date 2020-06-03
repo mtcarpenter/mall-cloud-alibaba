@@ -47,29 +47,8 @@ secure:
       - /admin/logout
       - /minio/upload
 
-aliyun:
-  oss:
-    endpoint: oss-cn-shenzhen.aliyuncs.com # oss对外服务的访问域名
-    accessKeyId: test # 访问身份验证中用到用户标识
-    accessKeySecret: test # 用户用于加密签名字符串和oss用来验证签名字符串的密钥
-    bucketName: macro-oss # oss的存储空间
-    policy:
-      expire: 300 # 签名有效期(S)
-    maxSize: 10 # 上传文件大小(M)
-    callback: http://39.98.190.128:8080/aliyun/oss/callback # 文件上传成功后的回调地址
-    dir:
-      prefix: mall/images/ # 上传文件夹路径前缀
-
-minio:
-  endpoint: http://192.168.3.101:9090 #MinIO服务所在地址
-  bucketName: mall #存储桶名称
-  accessKey: minioadmin #访问的key
-  secretKey: minioadmin #访问的秘钥
 
 logging:
   level:
     root: info #日志配置DEBUG,INFO,WARN,ERROR
     com.mtcarpenter.mall: debug
-#  file: demo_log.log #配置日志生成路径
-#  path: /var/logs #配置日志文件名称
-

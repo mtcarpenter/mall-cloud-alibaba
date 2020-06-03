@@ -13,8 +13,10 @@ spring:
           # 是否与服务发现组件进行结合，通过 serviceId 转发到具体的服务实例。默认为false
           enabled: true
           lower-case-service-id: true #使用小写service-id
+      # 处理响应头重复
       default-filters:
         - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials, RETAIN_UNIQUE
+      # 允许所有请求跨域
       globalcors:
         corsConfigurations:
           '[/**]':
