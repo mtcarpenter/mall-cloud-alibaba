@@ -1,5 +1,3 @@
-server:
-  port: 8085
 spring:
   profiles:
     active: dev #默认为开发环境
