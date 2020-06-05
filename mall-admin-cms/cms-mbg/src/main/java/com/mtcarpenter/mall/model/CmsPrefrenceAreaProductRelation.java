@@ -1,16 +1,12 @@
 package com.mtcarpenter.mall.model;
 
-import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 
 public class CmsPrefrenceAreaProductRelation implements Serializable {
-    private Long id;
-
-    private Long prefrenceAreaId;
-
-    private Long productId;
-
     private static final long serialVersionUID = 1L;
+    private Long id;
+    private Long prefrenceAreaId;
+    private Long productId;
 
     public Long getId() {
         return id;

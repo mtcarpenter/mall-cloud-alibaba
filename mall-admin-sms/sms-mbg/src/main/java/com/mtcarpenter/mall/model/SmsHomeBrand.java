@@ -1,20 +1,14 @@
 package com.mtcarpenter.mall.model;
 
-import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 
 public class SmsHomeBrand implements Serializable {
-    private Long id;
-
-    private Long brandId;
-
-    private String brandName;
-
-    private Integer recommendStatus;
-
-    private Integer sort;
-
     private static final long serialVersionUID = 1L;
+    private Long id;
+    private Long brandId;
+    private String brandName;
+    private Integer recommendStatus;
+    private Integer sort;
 
     public Long getId() {
         return id;

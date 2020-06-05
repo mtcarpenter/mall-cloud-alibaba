@@ -1,16 +1,12 @@
 package com.mtcarpenter.mall.model;
 
-import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 
 public class PmsAlbumPic implements Serializable {
-    private Long id;
-
-    private Long albumId;
-
-    private String pic;
-
     private static final long serialVersionUID = 1L;
+    private Long id;
+    private Long albumId;
+    private String pic;
 
     public Long getId() {
         return id;

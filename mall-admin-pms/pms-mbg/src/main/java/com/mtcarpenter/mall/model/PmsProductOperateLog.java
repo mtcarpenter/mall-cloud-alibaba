@@ -1,38 +1,27 @@
 package com.mtcarpenter.mall.model;
 
 import io.swagger.annotations.ApiModelProperty;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
 public class PmsProductOperateLog implements Serializable {
+    private static final long serialVersionUID = 1L;
     private Long id;
-
     private Long productId;
-
     private BigDecimal priceOld;
-
     private BigDecimal priceNew;
-
     private BigDecimal salePriceOld;
-
     private BigDecimal salePriceNew;
-
     @ApiModelProperty(value = "赠送的积分")
     private Integer giftPointOld;
-
     private Integer giftPointNew;
-
     private Integer usePointLimitOld;
-
     private Integer usePointLimitNew;
-
     @ApiModelProperty(value = "操作人")
     private String operateMan;
-
     private Date createTime;
-
-    private static final long serialVersionUID = 1L;
 
     public Long getId() {
         return id;

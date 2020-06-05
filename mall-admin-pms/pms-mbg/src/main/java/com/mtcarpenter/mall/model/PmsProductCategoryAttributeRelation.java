@@ -1,16 +1,12 @@
 package com.mtcarpenter.mall.model;
 
-import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 
 public class PmsProductCategoryAttributeRelation implements Serializable {
-    private Long id;
-
-    private Long productCategoryId;
-
-    private Long productAttributeId;
-
     private static final long serialVersionUID = 1L;
+    private Long id;
+    private Long productCategoryId;
+    private Long productAttributeId;
 
     public Long getId() {
         return id;

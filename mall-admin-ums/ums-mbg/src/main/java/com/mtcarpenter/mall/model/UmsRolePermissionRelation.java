@@ -1,16 +1,12 @@
 package com.mtcarpenter.mall.model;
 
-import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 
 public class UmsRolePermissionRelation implements Serializable {
-    private Long id;
-
-    private Long roleId;
-
-    private Long permissionId;
-
     private static final long serialVersionUID = 1L;
+    private Long id;
+    private Long roleId;
+    private Long permissionId;
 
     public Long getId() {
         return id;

@@ -1,24 +1,19 @@
 package com.mtcarpenter.mall.model;
 
 import io.swagger.annotations.ApiModelProperty;
+
 import java.io.Serializable;
 
 public class CmsHelpCategory implements Serializable {
+    private static final long serialVersionUID = 1L;
     private Long id;
-
     private String name;
-
     @ApiModelProperty(value = "分类图标")
     private String icon;
-
     @ApiModelProperty(value = "专题数量")
     private Integer helpCount;
-
     private Integer showStatus;
-
     private Integer sort;
-
-    private static final long serialVersionUID = 1L;
 
     public Long getId() {
         return id;

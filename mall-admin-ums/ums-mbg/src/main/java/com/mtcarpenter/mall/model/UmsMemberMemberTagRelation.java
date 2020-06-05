@@ -1,16 +1,12 @@
 package com.mtcarpenter.mall.model;
 
-import io.swagger.annotations.ApiModelProperty;
 import java.io.Serializable;
 
 public class UmsMemberMemberTagRelation implements Serializable {
-    private Long id;
-
-    private Long memberId;
-
-    private Long tagId;
-
     private static final long serialVersionUID = 1L;
+    private Long id;
+    private Long memberId;
+    private Long tagId;
 
     public Long getId() {
         return id;
