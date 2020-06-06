@@ -1,7 +1,16 @@
 package com.mtcarpenter.mall.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.google.gson.reflect.TypeToken;
+import com.mtcarpenter.mall.common.CmsPrefrenceAreaProductRelationInput;
+import com.mtcarpenter.mall.common.CmsSubjectProductRelationInput;
+import com.mtcarpenter.mall.common.PmsProductOutput;
+import com.mtcarpenter.mall.common.api.CommonResult;
+import com.mtcarpenter.mall.common.api.ResultCode;
 import com.mtcarpenter.mall.dao.*;
 import com.mtcarpenter.mall.dto.PmsProductParam;
 import com.mtcarpenter.mall.dto.PmsProductQueryParam;
@@ -9,8 +18,11 @@ import com.mtcarpenter.mall.dto.PmsProductResult;
 import com.mtcarpenter.mall.mapper.*;
 import com.mtcarpenter.mall.model.*;
 import com.mtcarpenter.mall.service.PmsProductService;
+import com.mtcarpenter.mall.client.CmsPrefrenceAreaProductRelationClient;
+import com.mtcarpenter.mall.client.CmsSubjectProductRelationClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -52,17 +64,13 @@ public class PmsProductServiceImpl implements PmsProductService {
     private PmsProductAttributeValueDao productAttributeValueDao;
     @Autowired
     private PmsProductAttributeValueMapper productAttributeValueMapper;
-/*
-        @todo 微服务对接
+
     @Autowired
-    private CmsSubjectProductRelationDao subjectProductRelationDao;
+    private CmsSubjectProductRelationClient cmsSubjectProductRelationClient;
+
     @Autowired
-    private CmsSubjectProductRelationMapper subjectProductRelationMapper;
-    @Autowired
-    private CmsPrefrenceAreaProductRelationDao prefrenceAreaProductRelationDao;
-    @Autowired
-    private CmsPrefrenceAreaProductRelationMapper prefrenceAreaProductRelationMapper;
-    */
+    private CmsPrefrenceAreaProductRelationClient cmsPrefrenceAreaProductRelationClient;
+
     @Autowired
     private PmsProductDao productDao;
     @Autowired
@@ -84,24 +92,24 @@ public class PmsProductServiceImpl implements PmsProductService {
         //满减价格
         relateAndInsertList(productFullReductionDao, productParam.getProductFullReductionList(), productId);
         //处理sku的编码
-        handleSkuStockCode(productParam.getSkuStockList(),productId);
+        handleSkuStockCode(productParam.getSkuStockList(), productId);
         //添加sku库存信息
         relateAndInsertList(skuStockDao, productParam.getSkuStockList(), productId);
         //添加商品参数,添加自定义商品规格
         relateAndInsertList(productAttributeValueDao, productParam.getProductAttributeValueList(), productId);
-        //关联专题 @todo 微服务对接
-       // relateAndInsertList(subjectProductRelationDao, productParam.getSubjectProductRelationList(), productId);
-        //关联优选 @todo 微服务对接
-       // relateAndInsertList(prefrenceAreaProductRelationDao, productParam.getPrefrenceAreaProductRelationList(), productId);
+        //关联专题
+        cmsSubjectProductRelationClient.relateAndInsertList(productParam.getSubjectProductRelationList(), productId);
+        //关联优选
+        cmsPrefrenceAreaProductRelationClient.relateAndInsertList(productParam.getPrefrenceAreaProductRelationList(), productId);
         count = 1;
         return count;
     }
 
     private void handleSkuStockCode(List<PmsSkuStock> skuStockList, Long productId) {
-        if(CollectionUtils.isEmpty(skuStockList))return;
-        for(int i=0;i<skuStockList.size();i++){
+        if (CollectionUtils.isEmpty(skuStockList)) return;
+        for (int i = 0; i < skuStockList.size(); i++) {
             PmsSkuStock skuStock = skuStockList.get(i);
-            if(StringUtils.isEmpty(skuStock.getSkuCode())){
+            if (StringUtils.isEmpty(skuStock.getSkuCode())) {
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
                 StringBuilder sb = new StringBuilder();
                 //日期
@@ -109,7 +117,7 @@ public class PmsProductServiceImpl implements PmsProductService {
                 //四位商品id
                 sb.append(String.format("%04d", productId));
                 //三位索引id
-                sb.append(String.format("%03d", i+1));
+                sb.append(String.format("%03d", i + 1));
                 skuStock.setSkuCode(sb.toString());
             }
         }
@@ -117,7 +125,26 @@ public class PmsProductServiceImpl implements PmsProductService {
 
     @Override
     public PmsProductResult getUpdateInfo(Long id) {
-        return productDao.getUpdateInfo(id);
+        PmsProductResult updateInfo = productDao.getUpdateInfo(id);
+
+        CommonResult<List<CmsSubjectProductRelationInput>> listCommonResult = cmsSubjectProductRelationClient.relationByProductId(id);
+        Gson gson = new Gson();
+        // 关联主题
+        if (listCommonResult.getCode() == ResultCode.SUCCESS.getCode()) {
+            List<CmsSubjectProductRelationInput> relationInputList = gson.fromJson(JSON.toJSONString(listCommonResult.getData()) ,
+                    new TypeToken<List<CmsSubjectProductRelationInput>>() {
+                    }.getType());
+            updateInfo.setSubjectProductRelationList(relationInputList);
+        }
+        // 关联优选
+        CommonResult<List<CmsPrefrenceAreaProductRelationInput>> commonResult = cmsPrefrenceAreaProductRelationClient.relationByProductId(id);
+        if (commonResult.getCode() == ResultCode.SUCCESS.getCode()) {
+            List<CmsPrefrenceAreaProductRelationInput> areaProductRelationInputs = gson.fromJson(JSON.toJSONString(commonResult.getData()),
+                    new TypeToken<List<CmsPrefrenceAreaProductRelationInput>>() {
+                    }.getType());
+            updateInfo.setPrefrenceAreaProductRelationList(areaProductRelationInputs);
+        }
+        return updateInfo;
     }
 
     @Override
@@ -149,18 +176,10 @@ public class PmsProductServiceImpl implements PmsProductService {
         productAttributeValueExample.createCriteria().andProductIdEqualTo(id);
         productAttributeValueMapper.deleteByExample(productAttributeValueExample);
         relateAndInsertList(productAttributeValueDao, productParam.getProductAttributeValueList(), id);
-     /*
-        @todo
         //关联专题
-        CmsSubjectProductRelationExample subjectProductRelationExample = new CmsSubjectProductRelationExample();
-        subjectProductRelationExample.createCriteria().andProductIdEqualTo(id);
-        subjectProductRelationMapper.deleteByExample(subjectProductRelationExample);
-        relateAndInsertList(subjectProductRelationDao, productParam.getSubjectProductRelationList(), id);
+        cmsSubjectProductRelationClient.relateAndUpdateList(productParam.getSubjectProductRelationList(), id);
         //关联优选
-        CmsPrefrenceAreaProductRelationExample prefrenceAreaExample = new CmsPrefrenceAreaProductRelationExample();
-        prefrenceAreaExample.createCriteria().andProductIdEqualTo(id);
-        prefrenceAreaProductRelationMapper.deleteByExample(prefrenceAreaExample);
-        relateAndInsertList(prefrenceAreaProductRelationDao, productParam.getPrefrenceAreaProductRelationList(), id);*/
+        cmsPrefrenceAreaProductRelationClient.relateAndUpdateList(productParam.getSubjectProductRelationList(), id);
         count = 1;
         return count;
     }
@@ -169,7 +188,7 @@ public class PmsProductServiceImpl implements PmsProductService {
         //当前的sku信息
         List<PmsSkuStock> currSkuList = productParam.getSkuStockList();
         //当前没有sku直接删除
-        if(CollUtil.isEmpty(currSkuList)){
+        if (CollUtil.isEmpty(currSkuList)) {
             PmsSkuStockExample skuStockExample = new PmsSkuStockExample();
             skuStockExample.createCriteria().andProductIdEqualTo(id);
             skuStockMapper.deleteByExample(skuStockExample);
@@ -180,27 +199,27 @@ public class PmsProductServiceImpl implements PmsProductService {
         skuStockExample.createCriteria().andProductIdEqualTo(id);
         List<PmsSkuStock> oriStuList = skuStockMapper.selectByExample(skuStockExample);
         //获取新增sku信息
-        List<PmsSkuStock> insertSkuList = currSkuList.stream().filter(item->item.getId()==null).collect(Collectors.toList());
+        List<PmsSkuStock> insertSkuList = currSkuList.stream().filter(item -> item.getId() == null).collect(Collectors.toList());
         //获取需要更新的sku信息
-        List<PmsSkuStock> updateSkuList = currSkuList.stream().filter(item->item.getId()!=null).collect(Collectors.toList());
+        List<PmsSkuStock> updateSkuList = currSkuList.stream().filter(item -> item.getId() != null).collect(Collectors.toList());
         List<Long> updateSkuIds = updateSkuList.stream().map(PmsSkuStock::getId).collect(Collectors.toList());
         //获取需要删除的sku信息
-        List<PmsSkuStock> removeSkuList = oriStuList.stream().filter(item-> !updateSkuIds.contains(item.getId())).collect(Collectors.toList());
-        handleSkuStockCode(insertSkuList,id);
-        handleSkuStockCode(updateSkuList,id);
+        List<PmsSkuStock> removeSkuList = oriStuList.stream().filter(item -> !updateSkuIds.contains(item.getId())).collect(Collectors.toList());
+        handleSkuStockCode(insertSkuList, id);
+        handleSkuStockCode(updateSkuList, id);
         //新增sku
-        if(CollUtil.isNotEmpty(insertSkuList)){
+        if (CollUtil.isNotEmpty(insertSkuList)) {
             relateAndInsertList(skuStockDao, insertSkuList, id);
         }
         //删除sku
-        if(CollUtil.isNotEmpty(removeSkuList)){
+        if (CollUtil.isNotEmpty(removeSkuList)) {
             List<Long> removeSkuIds = removeSkuList.stream().map(PmsSkuStock::getId).collect(Collectors.toList());
             PmsSkuStockExample removeExample = new PmsSkuStockExample();
             removeExample.createCriteria().andIdIn(removeSkuIds);
             skuStockMapper.deleteByExample(removeExample);
         }
         //修改sku
-        if(CollUtil.isNotEmpty(updateSkuList)){
+        if (CollUtil.isNotEmpty(updateSkuList)) {
             for (PmsSkuStock pmsSkuStock : updateSkuList) {
                 skuStockMapper.updateByPrimaryKeySelective(pmsSkuStock);
             }
@@ -298,11 +317,25 @@ public class PmsProductServiceImpl implements PmsProductService {
         PmsProductExample productExample = new PmsProductExample();
         PmsProductExample.Criteria criteria = productExample.createCriteria();
         criteria.andDeleteStatusEqualTo(0);
-        if(!StringUtils.isEmpty(keyword)){
+        if (!StringUtils.isEmpty(keyword)) {
             criteria.andNameLike("%" + keyword + "%");
             productExample.or().andDeleteStatusEqualTo(0).andProductSnLike("%" + keyword + "%");
         }
         return productMapper.selectByExample(productExample);
+    }
+
+    /**
+     * 根据 商品 id 过去商品信息
+     *
+     * @param productId
+     * @return
+     */
+    @Override
+    public PmsProductOutput getProductByProductId(Long productId) {
+        PmsProduct pmsProduct = productMapper.selectByPrimaryKey(productId);
+        PmsProductOutput pmsProductOutput = new PmsProductOutput();
+        BeanUtils.copyProperties(pmsProduct, pmsProductOutput);
+        return pmsProductOutput;
     }
 
     /**

@@ -14,4 +14,12 @@ public interface CmsSubjectProductRelationDao {
      * 批量创建
      */
     int insertList(@Param("list") List<CmsSubjectProductRelation> subjectProductRelationList);
+
+    /**
+     * 根据商品id 查询专题信息
+     * @param productId
+     * @return
+     */
+    List<CmsSubjectProductRelation> selectSubjectProductRelationByProductId(@Param("productId") Long productId);
+
 }

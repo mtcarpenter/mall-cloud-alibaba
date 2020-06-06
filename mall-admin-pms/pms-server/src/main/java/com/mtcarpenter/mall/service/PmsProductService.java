@@ -1,5 +1,6 @@
 package com.mtcarpenter.mall.service;
 
+import com.mtcarpenter.mall.common.PmsProductOutput;
 import com.mtcarpenter.mall.dto.PmsProductParam;
 import com.mtcarpenter.mall.dto.PmsProductQueryParam;
 import com.mtcarpenter.mall.dto.PmsProductResult;
@@ -70,4 +71,11 @@ public interface PmsProductService {
      * 根据商品名称或者货号模糊查询
      */
     List<PmsProduct> list(String keyword);
+
+    /**
+     * 根据 商品 id 过去商品信息
+     * @param productId
+     * @return
+     */
+    PmsProductOutput getProductByProductId(Long productId);
 }

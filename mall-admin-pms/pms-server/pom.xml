@@ -13,6 +13,11 @@
     <dependencies>
         <dependency>
             <groupId>com.mtcarpenter</groupId>
+            <artifactId>cms-common</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.mtcarpenter</groupId>
             <artifactId>pms-mbg</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
@@ -28,6 +33,12 @@
         <dependency>
             <groupId>net.logstash.logback</groupId>
             <artifactId>logstash-logback-encoder</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.mtcarpenter</groupId>
+            <artifactId>pms-common</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
         </dependency>
 
     </dependencies>

@@ -1,5 +1,7 @@
 package com.mtcarpenter.mall.common.api;
 
+import com.google.gson.JsonElement;
+
 /**
  * 通用返回对象
  * Created by macro on 2019/4/19.

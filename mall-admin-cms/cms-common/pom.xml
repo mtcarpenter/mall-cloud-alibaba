@@ -11,5 +11,16 @@
 
     <artifactId>cms-common</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.mtcarpenter</groupId>
+            <artifactId>mall-common</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+        </dependency>
+    </dependencies>
 
 </project>

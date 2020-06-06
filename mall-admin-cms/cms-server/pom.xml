@@ -14,6 +14,16 @@
     <dependencies>
         <dependency>
             <groupId>com.mtcarpenter</groupId>
+            <artifactId>cms-common</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.mtcarpenter</groupId>
+            <artifactId>pms-common</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.mtcarpenter</groupId>
             <artifactId>cms-mbg</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>

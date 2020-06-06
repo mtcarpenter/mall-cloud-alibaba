@@ -1,5 +1,7 @@
 package com.mtcarpenter.mall.controller;
 
+import com.mtcarpenter.mall.common.CmsSubjectProductRelationInput;
+import com.mtcarpenter.mall.common.PmsProductOutput;
 import com.mtcarpenter.mall.common.api.CommonPage;
 import com.mtcarpenter.mall.common.api.CommonResult;
 import com.mtcarpenter.mall.dto.PmsProductParam;
@@ -142,4 +144,15 @@ public class PmsProductController {
             return CommonResult.failed();
         }
     }
+
+
+    @ApiOperation("通过id查询商品信息")
+    @RequestMapping(value = "/getProductByProductId", method = RequestMethod.GET)
+    @ResponseBody
+    public CommonResult<PmsProductOutput> getProductByProductId(@RequestParam("productId") Long productId ) {
+        PmsProductOutput pmsProduct = productService.getProductByProductId(productId);
+        return CommonResult.success(pmsProduct);
+    }
+
+
 }

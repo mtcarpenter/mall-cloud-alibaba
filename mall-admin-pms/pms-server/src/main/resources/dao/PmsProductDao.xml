@@ -13,11 +13,6 @@
         </collection>
         <collection property="productAttributeValueList" columnPrefix="attribute_" resultMap="com.mtcarpenter.mall.mapper.PmsProductAttributeValueMapper.BaseResultMap">
         </collection>
-       <!--
-       @todo 微服务
-       <collection property="subjectProductRelationList" column="{productId=id}" select="selectSubjectProductRelationByProductId"/>
-        <collection property="prefrenceAreaProductRelationList" column="{productId=id}" select="selectPrefrenceAreaProductRelationByProductId"/>
--->
     </resultMap>
 
     <select id="getUpdateInfo" resultMap="updateInfoMap">
@@ -37,13 +32,6 @@
         LEFT JOIN pms_product_attribute_value a ON a.product_id=p.id
         WHERE p.id=#{id};
     </select>
-    <!--
-    @todo 微服务
-    <select id="selectSubjectProductRelationByProductId" resultMap="com.mtcarpenter.mall.mapper.CmsSubjectProductRelationMapper.BaseResultMap">
-        select * from cms_subject_product_relation where product_id=#{productId}
-    </select>
-    <select id="selectPrefrenceAreaProductRelationByProductId" resultMap="com.mtcarpenter.mall.mapper.CmsPrefrenceAreaProductRelationMapper.BaseResultMap">
-        select * from cms_prefrence_area_product_relation where product_id=#{productId}
-    </select>-->
+
 
 </mapper>

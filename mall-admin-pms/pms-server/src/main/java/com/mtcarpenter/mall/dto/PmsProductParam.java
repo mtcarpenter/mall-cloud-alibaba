@@ -2,6 +2,8 @@ package com.mtcarpenter.mall.dto;
 
 import com.mtcarpenter.mall.model.*;
 import io.swagger.annotations.ApiModelProperty;
+import com.mtcarpenter.mall.common.CmsPrefrenceAreaProductRelationInput;
+import com.mtcarpenter.mall.common.CmsSubjectProductRelationInput;
 
 import java.util.List;
 
@@ -20,12 +22,11 @@ public class PmsProductParam extends PmsProduct{
     private List<PmsSkuStock> skuStockList;
     @ApiModelProperty("商品参数及自定义规格属性")
     private List<PmsProductAttributeValue> productAttributeValueList;
-   /*
-    @todo 微服务对接
+
     @ApiModelProperty("专题和商品关系")
-    private List<CmsSubjectProductRelation> subjectProductRelationList;
+    private List<CmsSubjectProductRelationInput> subjectProductRelationList;
     @ApiModelProperty("优选专区和商品的关系")
-    private List<CmsPrefrenceAreaProductRelation> prefrenceAreaProductRelationList;*/
+    private List<CmsPrefrenceAreaProductRelationInput> prefrenceAreaProductRelationList;
 
     public List<PmsProductLadder> getProductLadderList() {
         return productLadderList;
@@ -66,21 +67,20 @@ public class PmsProductParam extends PmsProduct{
     public void setProductAttributeValueList(List<PmsProductAttributeValue> productAttributeValueList) {
         this.productAttributeValueList = productAttributeValueList;
     }
-/*
-    @todo 微服务对接
-    public List<CmsSubjectProductRelation> getSubjectProductRelationList() {
+
+    public List<CmsSubjectProductRelationInput> getSubjectProductRelationList() {
         return subjectProductRelationList;
     }
 
-    public void setSubjectProductRelationList(List<CmsSubjectProductRelation> subjectProductRelationList) {
+    public void setSubjectProductRelationList(List<CmsSubjectProductRelationInput> subjectProductRelationList) {
         this.subjectProductRelationList = subjectProductRelationList;
     }
 
-    public List<CmsPrefrenceAreaProductRelation> getPrefrenceAreaProductRelationList() {
+    public List<CmsPrefrenceAreaProductRelationInput> getPrefrenceAreaProductRelationList() {
         return prefrenceAreaProductRelationList;
     }
 
-    public void setPrefrenceAreaProductRelationList(List<CmsPrefrenceAreaProductRelation> prefrenceAreaProductRelationList) {
+    public void setPrefrenceAreaProductRelationList(List<CmsPrefrenceAreaProductRelationInput> prefrenceAreaProductRelationList) {
         this.prefrenceAreaProductRelationList = prefrenceAreaProductRelationList;
-    }*/
+    }
 }

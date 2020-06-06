@@ -1,15 +1,15 @@
 package com.mtcarpenter.mall.controller;
 
+import com.mtcarpenter.mall.common.CmsSubjectProductRelationInput;
 import com.mtcarpenter.mall.common.api.CommonResult;
 import com.mtcarpenter.mall.model.CmsPrefrenceArea;
 import com.mtcarpenter.mall.service.CmsPrefrenceAreaService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import com.mtcarpenter.mall.common.CmsPrefrenceAreaProductRelationInput;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -31,4 +31,33 @@ public class CmsPrefrenceAreaController {
         List<CmsPrefrenceArea> prefrenceAreaList = prefrenceAreaService.listAll();
         return CommonResult.success(prefrenceAreaList);
     }
+
+    @ApiOperation("批量关联专题")
+    @RequestMapping(value = "/relateAndInsertList", method = RequestMethod.POST)
+    @ResponseBody
+    public CommonResult relateAndInsertList(@RequestBody List<CmsPrefrenceAreaProductRelationInput> productRelationInput,
+                                            @RequestBody Long productId ) {
+        prefrenceAreaService.relateAndInsertList(productRelationInput,productId);
+        return CommonResult.success(null);
+    }
+
+    @ApiOperation("批量更新关联专题")
+    @RequestMapping(value = "/relateAndUpdateList", method = RequestMethod.POST)
+    @ResponseBody
+    public CommonResult relateAndUpdateList(@RequestBody List<CmsPrefrenceAreaProductRelationInput> productRelationInput,
+                                            @RequestBody Long productId ) {
+
+        prefrenceAreaService.relateAndUpdateList(productRelationInput,productId);
+        return CommonResult.success(null);
+    }
+
+
+    @ApiOperation("通过id查询关联专题")
+    @RequestMapping(value = "/relationByProductId", method = RequestMethod.GET)
+    @ResponseBody
+    public CommonResult<List<CmsPrefrenceAreaProductRelationInput>> relationByProductId(@RequestParam("productId") Long productId ) {
+        List<CmsPrefrenceAreaProductRelationInput> productRelationList = prefrenceAreaService.relationByProductId(productId);
+        return CommonResult.success(productRelationList);
+    }
+
 }

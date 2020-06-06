@@ -1,6 +1,12 @@
 package com.mtcarpenter.mall.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
+import com.google.gson.Gson;
+import com.mtcarpenter.mall.client.PmsProductClient;
+import com.mtcarpenter.mall.common.PmsProductOutput;
+import com.mtcarpenter.mall.common.api.CommonResult;
+import com.mtcarpenter.mall.common.api.ResultCode;
 import com.mtcarpenter.mall.dao.SmsFlashPromotionProductRelationDao;
 import com.mtcarpenter.mall.dto.SmsFlashPromotionProduct;
 import com.mtcarpenter.mall.mapper.SmsFlashPromotionProductRelationMapper;
@@ -22,6 +28,10 @@ public class SmsFlashPromotionProductRelationServiceImpl implements SmsFlashProm
     private SmsFlashPromotionProductRelationMapper relationMapper;
     @Autowired
     private SmsFlashPromotionProductRelationDao relationDao;
+
+    @Autowired
+    private PmsProductClient pmsProductClient;
+
     @Override
     public int create(List<SmsFlashPromotionProductRelation> relationList) {
         for (SmsFlashPromotionProductRelation relation : relationList) {
@@ -49,7 +59,17 @@ public class SmsFlashPromotionProductRelationServiceImpl implements SmsFlashProm
     @Override
     public List<SmsFlashPromotionProduct> list(Long flashPromotionId, Long flashPromotionSessionId, Integer pageSize, Integer pageNum) {
         PageHelper.startPage(pageNum,pageSize);
-        return relationDao.getList(flashPromotionId,flashPromotionSessionId);
+        List<SmsFlashPromotionProduct> promotionProducts = relationDao.getList(flashPromotionId, flashPromotionSessionId);
+        for (SmsFlashPromotionProduct smsFlashPromotionProduct : promotionProducts) {
+            CommonResult<PmsProductOutput> result = pmsProductClient.getProductByProductId(smsFlashPromotionProduct.getProductId());
+            if (result.getCode() == ResultCode.SUCCESS.getCode()){
+                Gson gson = new Gson();
+                PmsProductOutput pmsProductOutput = gson.fromJson(JSON.toJSONString(result.getData()), PmsProductOutput.class);
+                smsFlashPromotionProduct.setProduct(pmsProductOutput);
+            }
+
+        }
+        return promotionProducts;
     }
 
     @Override

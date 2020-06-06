@@ -8,4 +8,7 @@
             #{item.productId,jdbcType=BIGINT})
         </foreach>
     </insert>
+    <select id="selectSubjectProductRelationByProductId" resultMap="com.mtcarpenter.mall.mapper.CmsSubjectProductRelationMapper.BaseResultMap">
+        select * from cms_subject_product_relation where product_id=#{productId}
+    </select>
 </mapper>
