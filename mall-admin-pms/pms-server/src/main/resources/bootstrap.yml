@@ -7,3 +7,6 @@ spring:
     nacos:
       discovery:
         server-addr: 127.0.0.1:8848
+  main:
+    #当遇到同样名字的时候，是否允许覆盖注册
+    allow-bean-definition-overriding: true

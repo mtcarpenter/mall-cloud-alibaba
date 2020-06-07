@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+
 /**
  * @author mtcarpenter
  * @github https://github.com/mtcarpenter/mall-cloud-alibaba
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface PmsProductClient {
 
     @RequestMapping(value = "/getProductByProductId", method = RequestMethod.GET)
-    CommonResult<PmsProductOutput> getProductByProductId(@RequestParam("productId") Long productId );
+    CommonResult<PmsProductOutput> getProductByProductId(@RequestParam("productId") Long productId);
+
 
 }

@@ -22,7 +22,7 @@ public interface CmsPrefrenceAreaProductRelationClient {
      * @return
      */
     @RequestMapping(value = "/relateAndInsertList", method = RequestMethod.POST)
-    void relateAndInsertList(@RequestBody List<CmsPrefrenceAreaProductRelationInput> productRelationInput, @RequestBody Long productId );
+    void relateAndInsertList(@RequestBody List<CmsPrefrenceAreaProductRelationInput> productRelationInput, @RequestParam("productId") Long productId);
 
 
     /**
@@ -31,7 +31,7 @@ public interface CmsPrefrenceAreaProductRelationClient {
      * @param productId
      */
     @RequestMapping(value = "/relateAndUpdateList", method = RequestMethod.POST)
-    void relateAndUpdateList(@RequestBody List<CmsSubjectProductRelationInput> productRelationInputs , @RequestBody Long productId );
+    void relateAndUpdateList(@RequestBody List<CmsSubjectProductRelationInput> productRelationInputs , @RequestParam("productId") Long productId );
 
 
     /**

@@ -47,7 +47,7 @@ public class CmsSubjectController {
     @RequestMapping(value = "/relateAndInsertList", method = RequestMethod.POST)
     @ResponseBody
     public CommonResult relateAndInsertList(@RequestBody List<CmsSubjectProductRelationInput> productRelationInputs ,
-                                            @RequestBody Long productId ) {
+                                            @RequestParam("productId") Long productId ) {
         subjectService.relateAndInsertList(productRelationInputs,productId);
         return CommonResult.success(null);
     }
@@ -56,7 +56,7 @@ public class CmsSubjectController {
     @RequestMapping(value = "/relateAndUpdateList", method = RequestMethod.POST)
     @ResponseBody
     public CommonResult relateAndUpdateList(@RequestBody List<CmsSubjectProductRelationInput> productRelationInputs ,
-                                            @RequestBody Long productId ) {
+                                            @RequestParam("productId") Long productId ) {
         subjectService.relateAndUpdateList(productRelationInputs,productId);
         return CommonResult.success(null);
     }

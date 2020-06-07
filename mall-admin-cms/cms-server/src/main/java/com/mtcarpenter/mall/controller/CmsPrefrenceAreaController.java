@@ -36,7 +36,7 @@ public class CmsPrefrenceAreaController {
     @RequestMapping(value = "/relateAndInsertList", method = RequestMethod.POST)
     @ResponseBody
     public CommonResult relateAndInsertList(@RequestBody List<CmsPrefrenceAreaProductRelationInput> productRelationInput,
-                                            @RequestBody Long productId ) {
+                                            @RequestParam("productId") Long productId ) {
         prefrenceAreaService.relateAndInsertList(productRelationInput,productId);
         return CommonResult.success(null);
     }
@@ -45,7 +45,7 @@ public class CmsPrefrenceAreaController {
     @RequestMapping(value = "/relateAndUpdateList", method = RequestMethod.POST)
     @ResponseBody
     public CommonResult relateAndUpdateList(@RequestBody List<CmsPrefrenceAreaProductRelationInput> productRelationInput,
-                                            @RequestBody Long productId ) {
+                                            @RequestParam("productId") Long productId ) {
 
         prefrenceAreaService.relateAndUpdateList(productRelationInput,productId);
         return CommonResult.success(null);
