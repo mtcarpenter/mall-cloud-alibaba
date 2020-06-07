@@ -1,9 +1,16 @@
 server:
   port: 8085
 spring:
+  profiles:
+    # dev 默认为开发环境 , prod 线上环境
+    active: prod
   application:
     name: mall-admin-cms
   cloud:
     nacos:
       discovery:
         server-addr: 127.0.0.1:8848
+      config:
+        server-addr: 127.0.0.1:8848
+        prefix: mall-admin-cms
+        file-extension: yaml

@@ -1,12 +1,18 @@
 server:
   port: 8083
 spring:
+  profiles:
+    # dev 默认为开发环境 , prod 线上环境
+    active: prod
   application:
     name: mall-admin-pms
   cloud:
     nacos:
       discovery:
         server-addr: 127.0.0.1:8848
+      config:
+        server-addr: 127.0.0.1:8848
+        prefix: mall-admin-pms
+        file-extension: yaml
   main:
-    #当遇到同样名字的时候，是否允许覆盖注册
     allow-bean-definition-overriding: true
