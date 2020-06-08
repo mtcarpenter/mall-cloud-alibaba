@@ -1,0 +1,22 @@
+server:
+  port: 8095
+spring:
+  application:
+    name: mall-boot-monitor
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+  security:
+    user:
+      name: monitor
+      password: monitor
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: ALWAYS

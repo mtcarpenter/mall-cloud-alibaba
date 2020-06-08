@@ -18,7 +18,30 @@ spring:
     port: 6379 # Redis服务器连接端口
     password: # Redis服务器连接密码（默认为空）
     timeout: 300ms # 连接超时时间（毫秒）
+  zipkin:
+    base-url: http://localhost:9411
+    locator:
+      discovery:
+        enabled: true
+  sleuth:
+    sampler:
+      # zipkin 抽样比例 在默认情况下，该值为0.1
+      probability: 1.0
+  boot:
+    admin:
+      client:
+        # admin 服务端的地址
+        url: http://localhost:8095
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      # 展示详情
+      show-details: always
 mybatis:
   mapper-locations:
     - classpath:dao/*.xml
@@ -27,3 +50,4 @@ logging:
   level:
     root: info #日志配置DEBUG,INFO,WARN,ERROR
     com.mtcarpenter.mall: info
+    

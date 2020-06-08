@@ -27,6 +27,12 @@ spring:
             allowedMethods: "*"
             allowedHeaders: "*"
             allow-credentials: true
+  boot:
+    admin:
+      client:
+        # admin 服务端的地址
+        url: http://localhost:8095
+
 management:
   endpoints:
     web:
@@ -34,4 +40,5 @@ management:
         include: '*'
   endpoint:
     health:
+      # 展示详情
       show-details: always
