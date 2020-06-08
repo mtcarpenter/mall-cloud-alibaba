@@ -32,6 +32,7 @@ all-cloud-alibaba
 ├─mall-mbg MBG   -- 代码生成器
 ├─mall-security  -- Spring Security 公共配置类
 ├─mall-gateway   -- 网关服务 ,端口 8080 
+├─mall-boot-admin -- spring boot admin 监控，端口 8095
 ├─mall-admin-cms -- 内容管理模块服务，端口 8085
 ├─mall-admin-oms -- 订单管理模块服务，端口 8084      
 ├─mall-admin-pms -- 商品管理模块服务，端口 8083
@@ -89,7 +90,7 @@ all-cloud-alibaba
 - 启动 `mall-admin-oms`模块
 - 启动 `mall-storage`模块
 - 启动 `mall-gateway`模块
-
+- 启动 `mall-boot-admin`模块
 
 
 ## 许可证
