@@ -65,6 +65,10 @@ all-cloud-alibaba
     - 角色管理
     - 菜单管理
 
+## 架构图
+
+![mall-cloud-alibaba-service.jpg](http://mtcarpenter.oss-cn-beijing.aliyuncs.com/2020/mall-cloud-alibaba-service.jpg)
+
 ## 构建与运行
 
 ### 开发环境
