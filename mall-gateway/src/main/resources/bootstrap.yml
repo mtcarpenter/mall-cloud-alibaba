@@ -1,12 +1,19 @@
 server:
   port: 8080
 spring:
+  profiles:
+    # dev 默认为开发环境 , prod 线上环境
+    active: prod
   application:
     name: mall-gateway
   cloud:
     nacos:
       discovery:
         server-addr: 127.0.0.1:8848
+      config:
+        server-addr: 127.0.0.1:8848
+        prefix: mall-gateway
+        file-extension: yaml
     gateway:
       discovery:
         locator:
@@ -14,9 +21,6 @@ spring:
           enabled: true
           lower-case-service-id: true #使用小写service-id
       # 处理响应头重复
-#      default-filters:
-#        - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials, RETAIN_UNIQUE
-      # 允许所有请求跨域
       globalcors:
         corsConfigurations:
           '[/**]':
@@ -27,18 +31,3 @@ spring:
             allowedMethods: "*"
             allowedHeaders: "*"
             allow-credentials: true
-  boot:
-    admin:
-      client:
-        # admin 服务端的地址
-        url: http://localhost:8095
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: '*'
-  endpoint:
-    health:
-      # 展示详情
-      show-details: always

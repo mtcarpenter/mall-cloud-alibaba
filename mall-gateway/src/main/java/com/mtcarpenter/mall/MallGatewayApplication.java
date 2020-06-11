@@ -1,7 +1,9 @@
 package com.mtcarpenter.mall;
 
+import com.mtcarpenter.mall.config.IgnoreUrlsConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
 /**
  * @author mtcarpenter
@@ -10,6 +12,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  */
 
 @SpringBootApplication
+@EnableConfigurationProperties(IgnoreUrlsConfig.class)
 public class MallGatewayApplication {
     public static void main(String[] args) {
         SpringApplication.run(MallGatewayApplication.class, args);

@@ -39,7 +39,11 @@ public class UmsAdminCacheServiceImpl implements UmsAdminCacheService {
     private String REDIS_KEY_ADMIN;
     @Value("${redis.key.resourceList}")
     private String REDIS_KEY_RESOURCE_LIST;
+    @Value("${redis.key.token}")
+    private String REDIS_KEY_TOKEN;
 
+    @Value("${jwt.expiration}")
+    private Long JWT_EXPIRATION;
     @Override
     public void delAdmin(Long adminId) {
         UmsAdmin admin = adminService.getItem(adminId);
@@ -111,5 +115,39 @@ public class UmsAdminCacheServiceImpl implements UmsAdminCacheService {
     public void setResourceList(Long adminId, List<UmsResource> resourceList) {
         String key = REDIS_DATABASE + ":" + REDIS_KEY_RESOURCE_LIST + ":" + adminId;
         redisService.set(key, resourceList, REDIS_EXPIRE);
+    }
+
+    /**
+     * 删除 token
+     *
+     * @param username
+     */
+    @Override
+    public void delToken(String username) {
+        String key = REDIS_DATABASE + ":" + REDIS_KEY_TOKEN + ":" + username;
+        redisService.del(key);
+    }
+
+    /**
+     * 获取 token
+     *
+     * @param username
+     */
+    @Override
+    public String getToken(String username) {
+        String key = REDIS_DATABASE + ":" + REDIS_KEY_TOKEN + ":" + username;
+        return (String) redisService.get(key);
+    }
+
+    /**
+     * 设置 token
+     *
+     * @param username
+     * @param token
+     */
+    @Override
+    public void setToken(String username, String token) {
+        String key = REDIS_DATABASE + ":" + REDIS_KEY_TOKEN + ":" + username;
+        redisService.set(key, token, JWT_EXPIRATION);
     }
 }

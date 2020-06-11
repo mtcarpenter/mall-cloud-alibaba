@@ -1,0 +1,42 @@
+spring:
+  redis:
+    host: localhost
+    database: 0
+    port: 6379
+    password:
+    timeout: 300ms
+  boot:
+    admin:
+      client:
+        # admin 服务端的地址
+        url: http://localhost:8095
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      # 展示详情
+      show-details: always
+# 过滤不需要认证路径条件
+secure:
+  ignored:
+    urls: #安全路径白名单
+      - /swagger-ui.html
+      - /swagger-resources/**
+      - /swagger/**
+      - /**/v2/api-docs
+      - /**/*.js
+      - /**/*.css
+      - /**/*.png
+      - /**/*.ico
+      - /webjars/springfox-swagger-ui/**
+      - /actuator/**
+      - /druid/**
+      - /admin/login
+      - /admin/register
+      - /admin/info
+      - /admin/logout
+      - /minio/upload

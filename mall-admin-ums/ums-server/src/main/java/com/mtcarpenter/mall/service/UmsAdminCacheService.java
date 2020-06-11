@@ -54,4 +54,21 @@ public interface UmsAdminCacheService {
      * 设置后台后台用户资源列表
      */
     void setResourceList(Long adminId, List<UmsResource> resourceList);
+
+    /**
+     * 删除 token
+     */
+    void delToken(String username);
+
+    /**
+     * 获取 token
+     */
+    String getToken(String username);
+
+    /**
+     * 设置 token
+     */
+    void setToken(String username,String token);
+
+
 }
