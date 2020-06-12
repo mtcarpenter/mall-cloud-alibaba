@@ -71,7 +71,7 @@ all-cloud-alibaba
 
 ## 架构图
 
-![mall-cloud-alibaba-service.jpg](http://mtcarpenter.oss-cn-beijing.aliyuncs.com/2020/mall-cloud-alibaba-service.jpg)
+![ba176adb-a207-d216-a850-0a73ae053ebd.png](http://mtcarpenter.oss-cn-beijing.aliyuncs.com/logo/ba176adb-a207-d216-a850-0a73ae053ebd.png)
 
 ## 构建与运行
 
