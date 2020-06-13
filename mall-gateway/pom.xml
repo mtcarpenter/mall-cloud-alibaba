@@ -13,6 +13,21 @@
     <artifactId>mall-gateway</artifactId>
 
     <dependencies>
+        <dependency>
+            <groupId>com.mtcarpenter</groupId>
+            <artifactId>mall-common</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-web</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>com.github.pagehelper</groupId>
+                    <artifactId>pagehelper-spring-boot-starter</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
         <!-- gateway -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
