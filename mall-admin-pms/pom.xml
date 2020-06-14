@@ -8,6 +8,7 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
+    <description>后端商品服务</description>
 
     <artifactId>mall-admin-pms</artifactId>
     <packaging>pom</packaging>
