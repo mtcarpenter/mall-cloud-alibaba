@@ -22,6 +22,18 @@
             <artifactId>mall-security</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
+        <!--订单公共模块-->
+        <dependency>
+            <groupId>com.mtcarpenter</groupId>
+            <artifactId>order-common</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <!--营销模块-->
+        <dependency>
+            <groupId>com.mtcarpenter</groupId>
+            <artifactId>coupon-common</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>

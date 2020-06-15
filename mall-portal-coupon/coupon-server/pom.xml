@@ -12,4 +12,28 @@
     <artifactId>coupon-server</artifactId>
 
 
+    <dependencies>
+        <dependency>
+            <groupId>com.mtcarpenter</groupId>
+            <artifactId>coupon-common</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.mtcarpenter</groupId>
+            <artifactId>order-common</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.mtcarpenter</groupId>
+            <artifactId>coupon-mbg</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+
+    </dependencies>
+
 </project>
