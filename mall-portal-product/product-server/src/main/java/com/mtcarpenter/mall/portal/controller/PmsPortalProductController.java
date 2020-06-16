@@ -59,7 +59,4 @@ public class PmsPortalProductController {
     }
 
 
-    public CommonResult<List<CartPromotionItem>> calcCartPromotion(List<OmsCartItem> cartItemList) {
-
-    }
 }
