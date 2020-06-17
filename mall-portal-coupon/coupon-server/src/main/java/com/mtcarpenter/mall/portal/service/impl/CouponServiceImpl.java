@@ -13,6 +13,7 @@ import com.mtcarpenter.mall.portal.service.CouponService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -170,6 +171,29 @@ public class CouponServiceImpl implements CouponService {
         }
 
 
+    }
+
+    /**
+     * 将优惠券信息更改为指定状态
+     *
+     * @param couponId
+     * @param memberId
+     * @param useStatus
+     */
+    @Override
+    public void updateCouponStatus(Long couponId, Long memberId, Integer useStatus) {
+        if (couponId == null) return;
+        //查询第一张优惠券
+        SmsCouponHistoryExample example = new SmsCouponHistoryExample();
+        example.createCriteria().andMemberIdEqualTo(memberId)
+                .andCouponIdEqualTo(couponId).andUseStatusEqualTo(useStatus == 0 ? 1 : 0);
+        List<SmsCouponHistory> couponHistoryList = couponHistoryMapper.selectByExample(example);
+        if (!CollectionUtils.isEmpty(couponHistoryList)) {
+            SmsCouponHistory couponHistory = couponHistoryList.get(0);
+            couponHistory.setUseTime(new Date());
+            couponHistory.setUseStatus(useStatus);
+            couponHistoryMapper.updateByPrimaryKeySelective(couponHistory);
+        }
     }
 
 

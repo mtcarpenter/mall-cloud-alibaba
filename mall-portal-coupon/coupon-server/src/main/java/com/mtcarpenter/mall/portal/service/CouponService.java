@@ -39,4 +39,14 @@ public interface CouponService {
      * @return
      */
     List<SmsCouponHistoryDetailOutput> listCart(List<CartPromotionItemOutput> cartPromotionItemList, Long memberId, Integer type);
+
+    /**
+     * 将优惠券信息更改为指定状态
+     *
+     * @param couponId
+     * @param memberId
+     * @param useStatus
+     */
+    void updateCouponStatus(Long couponId, Long memberId, Integer useStatus);
+
 }

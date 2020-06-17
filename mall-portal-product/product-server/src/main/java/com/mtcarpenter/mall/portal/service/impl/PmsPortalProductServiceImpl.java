@@ -3,16 +3,21 @@ package com.mtcarpenter.mall.portal.service.impl;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import com.github.pagehelper.PageHelper;
+import com.mtcarpenter.mall.common.CartProductOutput;
+import com.mtcarpenter.mall.common.PromotionProductOutput;
 import com.mtcarpenter.mall.mapper.*;
 import com.mtcarpenter.mall.model.*;
 import com.mtcarpenter.mall.portal.dao.PortalProductDao;
+import com.mtcarpenter.mall.portal.domain.CartProduct;
 import com.mtcarpenter.mall.portal.domain.PmsPortalProductDetail;
 import com.mtcarpenter.mall.portal.domain.PmsProductCategoryNode;
+import com.mtcarpenter.mall.portal.domain.PromotionProduct;
 import com.mtcarpenter.mall.portal.service.PmsPortalProductService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -124,6 +129,32 @@ public class PmsPortalProductServiceImpl implements PmsPortalProductService {
         //商品可用优惠券 @todo
         // result.setCouponList(portalProductDao.getAvailableCouponList(product.getId(),product.getProductCategoryId()));
         return result;
+    }
+
+    /**
+     * 获取购物车中某个商品的规格,用于重选规格
+     *
+     * @param productId
+     * @return
+     */
+    @Override
+    public CartProductOutput getCartProduct(Long productId) {
+        CartProduct cartProduct = portalProductDao.getCartProduct(productId);
+        CartProductOutput cartProductOutput = new CartProductOutput();
+        BeanUtils.copyProperties(cartProduct, cartProductOutput);
+        return cartProductOutput;
+    }
+
+    /**
+     * 获取促销商品
+     *
+     * @param productIdList
+     * @return
+     */
+    @Override
+    public List<PromotionProductOutput> getPromotionProductList(List<Long> productIdList) {
+        List<PromotionProductOutput> promotionProductList = portalProductDao.getPromotionProductList(productIdList);
+        return promotionProductList;
     }
 
 

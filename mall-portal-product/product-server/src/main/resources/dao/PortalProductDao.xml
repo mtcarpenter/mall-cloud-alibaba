@@ -10,7 +10,7 @@
                     resultMap="com.mtcarpenter.mall.mapper.PmsSkuStockMapper.BaseResultMap">
         </collection>
     </resultMap>
-    <resultMap id="promotionProductMap" type="com.mtcarpenter.mall.portal.domain.PromotionProduct"
+    <resultMap id="promotionProductMap" type="com.mtcarpenter.mall.common.PromotionProductOutput"
                extends="com.mtcarpenter.mall.mapper.PmsProductMapper.BaseResultMap">
         <id column="id" jdbcType="BIGINT" property="id"/>
         <collection property="skuStockList" columnPrefix="sku_"

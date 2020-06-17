@@ -1,6 +1,9 @@
 package com.mtcarpenter.mall.portal.service;
 
+import com.mtcarpenter.mall.common.CartProductOutput;
+import com.mtcarpenter.mall.common.PromotionProductOutput;
 import com.mtcarpenter.mall.model.PmsProduct;
+import com.mtcarpenter.mall.portal.domain.CartProduct;
 import com.mtcarpenter.mall.portal.domain.PmsPortalProductDetail;
 import com.mtcarpenter.mall.portal.domain.PmsProductCategoryNode;
 
@@ -25,4 +28,20 @@ public interface PmsPortalProductService {
      * 获取前台商品详情
      */
     PmsPortalProductDetail detail(Long id);
+
+    /**
+     * 获取购物车中某个商品的规格,用于重选规格
+     *
+     * @param productId
+     * @return
+     */
+    CartProductOutput getCartProduct(Long productId);
+
+    /**
+     * 获取促销商品
+     *
+     * @param productIdList
+     * @return
+     */
+    List<PromotionProductOutput> getPromotionProductList(List<Long> productIdList);
 }

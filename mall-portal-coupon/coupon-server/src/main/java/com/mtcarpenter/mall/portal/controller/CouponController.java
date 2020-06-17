@@ -57,4 +57,32 @@ public class CouponController {
         return CommonResult.success(couponHistoryList);
     }
 
+    @ApiOperation("获取登录会员购物车的相关优惠券")
+    @ApiImplicitParam(name = "type", value = "使用可用:0->不可用；1->可用",
+            defaultValue = "1", allowableValues = "0,1", paramType = "query", dataType = "integer")
+    @RequestMapping(value = "/list/cart/{type}", method = RequestMethod.POST)
+    public CommonResult<List<SmsCouponHistoryDetailOutput>> listCartPromotion(@PathVariable Integer type,
+                                                                              List<CartPromotionItemOutput> cartPromotionItemList,
+                                                                              @RequestParam(value = "memberId", required = false) Long memberId
+    ) {
+        List<SmsCouponHistoryDetailOutput> couponHistoryList = couponService.listCart(cartPromotionItemList, memberId, type);
+        return CommonResult.success(couponHistoryList);
+    }
+
+    /**
+     * 将优惠券信息更改为指定状态
+     *
+     * @param couponId  优惠券id
+     * @param memberId  会员id
+     * @param useStatus 0->未使用；1->已使用
+     */
+    @ApiOperation("将优惠券信息更改为指定状态")
+    @RequestMapping(value = "/updateCouponStatus", method = RequestMethod.GET)
+    public CommonResult updateCouponStatus(@RequestParam(value = "couponId") Long couponId,
+                                           @RequestParam(value = "memberId") Long memberId,
+                                           @RequestParam(value = "useStatus") Integer useStatus) {
+        couponService.updateCouponStatus(couponId, memberId, useStatus);
+        return CommonResult.success(null);
+    }
+
 }
