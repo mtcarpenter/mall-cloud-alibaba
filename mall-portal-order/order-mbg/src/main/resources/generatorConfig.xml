@@ -37,8 +37,23 @@
         <javaClientGenerator type="XMLMAPPER" targetPackage="com.mtcarpenter.mall.mapper"
                              targetProject="mall-portal-order\order-mbg\src\main\java"/>
         <!--生成全部表tableName设为%-->
-        <table tableName="ums_member%">
+        <table tableName="oms_order">
             <generatedKey column="id" sqlStatement="MySql" identity="true"/>
         </table>
+        <!--生成全部表tableName设为%-->
+        <table tableName="oms_order_item">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="oms_cart_item">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="oms_order_return_apply">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="oms_order_setting">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+
+
     </context>
 </generatorConfiguration>

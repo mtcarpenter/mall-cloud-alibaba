@@ -21,7 +21,6 @@ import java.util.List;
 public class UmsMemberCouponServiceImpl implements UmsMemberCouponService {
     @Autowired
     private UmsMemberService memberService;
-
     @Autowired
     private CouponFeign couponFeign;
 
@@ -29,7 +28,7 @@ public class UmsMemberCouponServiceImpl implements UmsMemberCouponService {
     public void add(Long couponId) {
         UmsMember currentMember = memberService.getCurrentMember();
         // 远程接口 添加优惠券
-        couponFeign.add(couponId, currentMember.getId(), currentMember.getNickname());
+         couponFeign.add(couponId, currentMember.getId(), currentMember.getNickname());
     }
 
 

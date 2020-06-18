@@ -1,5 +1,6 @@
 package com.mtcarpenter.mall.portal.controller;
 
+import com.mtcarpenter.mall.common.UmsMemberReceiveAddressOutput;
 import com.mtcarpenter.mall.common.api.CommonResult;
 import com.mtcarpenter.mall.model.UmsMemberReceiveAddress;
 import com.mtcarpenter.mall.portal.service.UmsMemberReceiveAddressService;
@@ -58,8 +59,8 @@ public class UmsMemberReceiveAddressController {
     @ApiOperation("显示所有收货地址")
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
-    public CommonResult<List<UmsMemberReceiveAddress>> list() {
-        List<UmsMemberReceiveAddress> addressList = memberReceiveAddressService.list();
+    public CommonResult<List<UmsMemberReceiveAddressOutput>> list(@RequestParam(value = "memberId",required = false) Long memberId) {
+        List<UmsMemberReceiveAddressOutput> addressList = memberReceiveAddressService.list(memberId);
         return CommonResult.success(addressList);
     }
 

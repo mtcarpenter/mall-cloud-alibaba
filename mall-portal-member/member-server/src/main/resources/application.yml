@@ -2,7 +2,11 @@ spring:
   profiles:
     active: dev #默认为开发环境
   application:
-    name: member-server
+    name: mall-portal-member
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
 mybatis:
   mapper-locations:
     - classpath:dao/*.xml
@@ -43,10 +47,4 @@ redis:
   expire:
     authCode: 90 # 验证码超期时间
     common: 86400 # 24小时
-
-# 消息队列定义
-rabbitmq:
-  queue:
-    name:
-      cancelOrder: cancelOrderQueue
 

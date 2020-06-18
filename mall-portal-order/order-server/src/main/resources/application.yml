@@ -1,0 +1,11 @@
+spring:
+  profiles:
+    active: dev #默认为开发环境
+  application:
+    name: order-server
+mybatis:
+  mapper-locations:
+    - classpath:dao/*.xml
+    - classpath*:com/**/mapper/*.xml
+
+

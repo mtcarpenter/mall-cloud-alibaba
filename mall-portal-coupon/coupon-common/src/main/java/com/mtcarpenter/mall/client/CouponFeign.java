@@ -4,8 +4,6 @@ import com.mtcarpenter.mall.common.CartPromotionItemOutput;
 import com.mtcarpenter.mall.common.SmsCouponHistoryDetailOutput;
 import com.mtcarpenter.mall.common.SmsCouponHistoryOutput;
 import com.mtcarpenter.mall.common.api.CommonResult;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiOperation;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,7 +26,7 @@ public interface CouponFeign {
      * @return
      */
     @PostMapping(value = "/add/{couponId}")
-    public CommonResult add(@PathVariable Long couponId, @RequestParam("memberId") Long memberId, @RequestParam("nickName") String nickName);
+    CommonResult add(@PathVariable Long couponId, @RequestParam("memberId") Long memberId, @RequestParam("nickName") String nickName);
 
 
     /**
@@ -39,8 +37,8 @@ public interface CouponFeign {
      * @return
      */
     @GetMapping(value = "/list")
-    public CommonResult<List<SmsCouponHistoryOutput>> list(@RequestParam(value = "memberId", required = false) Long memberId,
-                                                           @RequestParam(value = "useStatus", required = false) Integer useStatus);
+    CommonResult<List<SmsCouponHistoryOutput>> list(@RequestParam(value = "memberId", required = false) Long memberId,
+                                                    @RequestParam(value = "useStatus", required = false) Integer useStatus);
 
 
     /**
@@ -58,11 +56,10 @@ public interface CouponFeign {
      * @param memberId
      * @return
      */
-    @RequestMapping(value = "/list/cart/{type}", method = RequestMethod.POST)
+    @PostMapping(value = "/list/cart/{type}")
     CommonResult<List<SmsCouponHistoryDetailOutput>> listCartPromotion(@PathVariable Integer type,
                                                                        List<CartPromotionItemOutput> cartPromotionItemList,
-                                                                       @RequestParam(value = "memberId", required = false) Long memberId
-    );
+                                                                       @RequestParam(value = "memberId", required = false) Long memberId);
 
     /**
      * 将优惠券信息更改为指定状态
@@ -71,7 +68,7 @@ public interface CouponFeign {
      * @param memberId  会员id
      * @param useStatus 0->未使用；1->已使用
      */
-    @RequestMapping(value = "/updateCouponStatus", method = RequestMethod.GET)
+    @GetMapping(value = "/updateCouponStatus")
     CommonResult updateCouponStatus(@RequestParam(value = "couponId") Long couponId,
                                     @RequestParam(value = "memberId") Long memberId,
                                     @RequestParam(value = "useStatus") Integer useStatus);

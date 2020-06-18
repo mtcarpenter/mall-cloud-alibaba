@@ -14,12 +14,7 @@
     <dependencies>
         <dependency>
             <groupId>com.mtcarpenter</groupId>
-            <artifactId>member-mbg</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>com.mtcarpenter</groupId>
-            <artifactId>mall-security</artifactId>
+            <artifactId>member-common</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
         <!--订单公共模块-->
@@ -35,12 +30,14 @@
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
+            <groupId>com.mtcarpenter</groupId>
+            <artifactId>member-mbg</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-security</artifactId>
+            <groupId>com.mtcarpenter</groupId>
+            <artifactId>mall-security</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
         </dependency>
         <!--mongodb依赖配置-->
         <dependency>
@@ -52,6 +49,20 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
+        <!-- nacos discovery-->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+        </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>
