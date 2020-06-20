@@ -1,6 +1,5 @@
 package com.mtcarpenter.mall.portal.service.impl;
 
-import com.mtcarpenter.mall.common.UmsIntegrationConsumeSettingOutput;
 import com.mtcarpenter.mall.mapper.UmsIntegrationConsumeSettingMapper;
 import com.mtcarpenter.mall.model.UmsIntegrationConsumeSetting;
 import com.mtcarpenter.mall.model.UmsMember;
@@ -8,7 +7,6 @@ import com.mtcarpenter.mall.portal.domain.MemberProductCollection;
 import com.mtcarpenter.mall.portal.repository.MemberProductCollectionRepository;
 import com.mtcarpenter.mall.portal.service.MemberCollectionService;
 import com.mtcarpenter.mall.portal.service.UmsMemberService;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -64,10 +62,7 @@ public class MemberCollectionServiceImpl implements MemberCollectionService {
      * @return
      */
     @Override
-    public UmsIntegrationConsumeSettingOutput integrationConsumeSetting(Long id) {
-        UmsIntegrationConsumeSetting umsIntegrationConsumeSetting = integrationConsumeSettingMapper.selectByPrimaryKey(id);
-        UmsIntegrationConsumeSettingOutput consumeSettingOutput = new UmsIntegrationConsumeSettingOutput();
-        BeanUtils.copyProperties(umsIntegrationConsumeSetting, consumeSettingOutput);
-        return consumeSettingOutput;
+    public UmsIntegrationConsumeSetting integrationConsumeSetting(Long id) {
+        return integrationConsumeSettingMapper.selectByPrimaryKey(id);
     }
 }

@@ -1,7 +1,8 @@
 package com.mtcarpenter.mall.portal.dao;
 
 
-import com.mtcarpenter.mall.portal.domain.SmsCouponHistoryDetail;
+import com.mtcarpenter.mall.domain.SmsCouponHistoryDetail;
+import com.mtcarpenter.mall.model.SmsCoupon;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -12,4 +13,6 @@ import java.util.List;
  */
 public interface SmsCouponHistoryDao {
     List<SmsCouponHistoryDetail> getDetailList(@Param("memberId") Long memberId);
+
+    List<SmsCoupon> getAvailableCouponList(@Param("productId") Long productId,@Param("productCategoryId") Long productCategoryId);
 }

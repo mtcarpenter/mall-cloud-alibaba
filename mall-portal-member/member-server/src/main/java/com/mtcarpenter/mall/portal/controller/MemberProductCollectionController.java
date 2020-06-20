@@ -1,8 +1,8 @@
 package com.mtcarpenter.mall.portal.controller;
 
-import com.mtcarpenter.mall.common.UmsIntegrationConsumeSettingOutput;
 import com.mtcarpenter.mall.common.api.CommonPage;
 import com.mtcarpenter.mall.common.api.CommonResult;
+import com.mtcarpenter.mall.model.UmsIntegrationConsumeSetting;
 import com.mtcarpenter.mall.portal.domain.MemberProductCollection;
 import com.mtcarpenter.mall.portal.service.MemberCollectionService;
 import io.swagger.annotations.Api;
@@ -60,8 +60,8 @@ public class MemberProductCollectionController {
     @ApiOperation("获取积分使用规则")
     @RequestMapping(value = "/integrationConsumeSetting", method = RequestMethod.GET)
     @ResponseBody
-    public CommonResult<UmsIntegrationConsumeSettingOutput> integrationConsumeSetting(@RequestParam(value = "id", defaultValue = "1") Long id) {
-        UmsIntegrationConsumeSettingOutput integrationConsumeSetting = memberCollectionService.integrationConsumeSetting(id);
+    public CommonResult<UmsIntegrationConsumeSetting> integrationConsumeSetting(@RequestParam(value = "id", defaultValue = "1") Long id) {
+        UmsIntegrationConsumeSetting integrationConsumeSetting = memberCollectionService.integrationConsumeSetting(id);
         return CommonResult.success(integrationConsumeSetting);
     }
 

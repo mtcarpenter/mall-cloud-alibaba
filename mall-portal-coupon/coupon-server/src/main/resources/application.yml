@@ -1,8 +1,14 @@
+server:
+  port: 8072
 spring:
   profiles:
     active: dev #默认为开发环境
   application:
-    name: coupon-server
+    name: mall-portal-coupon
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
 mybatis:
   mapper-locations:
     - classpath:dao/*.xml

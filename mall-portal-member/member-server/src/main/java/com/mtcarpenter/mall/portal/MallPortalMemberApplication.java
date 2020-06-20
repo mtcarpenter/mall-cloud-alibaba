@@ -1,6 +1,5 @@
 package com.mtcarpenter.mall.portal;
 
-import com.mtcarpenter.mall.client.CouponFeign;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.openfeign.EnableFeignClients;
@@ -11,7 +10,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
  * @desc 微信公众号：山间木匠
  */
 @SpringBootApplication(scanBasePackages = "com.mtcarpenter.mall")
-@EnableFeignClients(clients = {CouponFeign.class})
+@EnableFeignClients(basePackages = "com.mtcarpenter.mall.client")
 public class MallPortalMemberApplication {
     public static void main(String[] args) {
         SpringApplication.run(MallPortalMemberApplication.class, args);

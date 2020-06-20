@@ -16,8 +16,8 @@ import java.util.List;
 @Getter
 @Setter
 public class HomeContentResult {
-    //轮播广告
-    private List<SmsHomeAdvertise> advertiseList;
+    //   轮播广告
+     private List<SmsHomeAdvertise> advertiseList;
     //推荐品牌
     private List<PmsBrand> brandList;
     //当前秒杀场次

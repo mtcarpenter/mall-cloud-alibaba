@@ -1,8 +1,8 @@
 package com.mtcarpenter.mall.portal.util;
 
-import com.mtcarpenter.mall.common.UmsMemberOutput;
 import com.mtcarpenter.mall.common.api.ResultCode;
 import com.mtcarpenter.mall.common.exception.ApiException;
+import com.mtcarpenter.mall.model.UmsMember;
 import io.micrometer.core.instrument.util.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +37,7 @@ public class MemberUtil {
      *
      * @return
      */
-    public UmsMemberOutput getRedisUmsMember(HttpServletRequest request) {
+    public UmsMember getRedisUmsMember(HttpServletRequest request) {
         // token 验证
         String token = request.getHeader(tokenHeader);
         if (StringUtils.isBlank(token)) {
@@ -49,6 +49,6 @@ public class MemberUtil {
             log.error("resultToken = {}", username);
             throw new ApiException(ResultCode.UNAUTHORIZED);
         }
-        return (UmsMemberOutput) redisTemplate.opsForValue().get(username);
+        return (UmsMember) redisTemplate.opsForValue().get(username);
     }
 }

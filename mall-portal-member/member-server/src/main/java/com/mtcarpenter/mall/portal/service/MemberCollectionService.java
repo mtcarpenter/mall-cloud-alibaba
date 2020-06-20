@@ -1,6 +1,6 @@
 package com.mtcarpenter.mall.portal.service;
 
-import com.mtcarpenter.mall.common.UmsIntegrationConsumeSettingOutput;
+import com.mtcarpenter.mall.model.UmsIntegrationConsumeSetting;
 import com.mtcarpenter.mall.portal.domain.MemberProductCollection;
 import org.springframework.data.domain.Page;
 
@@ -21,5 +21,5 @@ public interface MemberCollectionService {
      * @param id
      * @return
      */
-    UmsIntegrationConsumeSettingOutput integrationConsumeSetting(Long id);
+    UmsIntegrationConsumeSetting integrationConsumeSetting(Long id);
 }

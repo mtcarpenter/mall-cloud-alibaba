@@ -1,11 +1,11 @@
 package com.mtcarpenter.mall.portal.controller;
 
-import com.mtcarpenter.mall.common.CartProductOutput;
-import com.mtcarpenter.mall.common.PromotionProductOutput;
+
 import com.mtcarpenter.mall.common.api.CommonPage;
 import com.mtcarpenter.mall.common.api.CommonResult;
+import com.mtcarpenter.mall.domain.CartProduct;
+import com.mtcarpenter.mall.domain.PromotionProduct;
 import com.mtcarpenter.mall.model.PmsProduct;
-import com.mtcarpenter.mall.portal.domain.CartProduct;
 import com.mtcarpenter.mall.portal.domain.PmsPortalProductDetail;
 import com.mtcarpenter.mall.portal.domain.PmsProductCategoryNode;
 import com.mtcarpenter.mall.portal.service.PmsPortalProductService;
@@ -65,16 +65,16 @@ public class PmsPortalProductController {
     @ApiOperation("获取购物车中某个商品的规格,用于重选规格")
     @RequestMapping(value = "/getProduct/{productId}", method = RequestMethod.GET)
     @ResponseBody
-    public CommonResult<CartProductOutput> getCartProduct(@PathVariable Long productId) {
-        CartProductOutput cartProduct = portalProductService.getCartProduct(productId);
+    public CommonResult<CartProduct> getCartProduct(@PathVariable Long productId) {
+        CartProduct cartProduct = portalProductService.getCartProduct(productId);
         return CommonResult.success(cartProduct);
     }
 
     @ApiOperation("获取促销商品")
     @RequestMapping(value = "/getPromotionProductList", method = RequestMethod.POST)
     @ResponseBody
-    public CommonResult<List<PromotionProductOutput>> getPromotionProductList(@RequestBody List<Long> productIdList) {
-        List<PromotionProductOutput> promotionProductOutput = portalProductService.getPromotionProductList(productIdList);
+    public CommonResult<List<PromotionProduct>> getPromotionProductList(@RequestBody List<Long> productIdList) {
+        List<PromotionProduct> promotionProductOutput = portalProductService.getPromotionProductList(productIdList);
         return CommonResult.success(promotionProductOutput);
     }
 

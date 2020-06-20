@@ -1,13 +1,8 @@
 package com.mtcarpenter.mall.portal.controller;
 
-import com.mtcarpenter.mall.common.SmsCouponHistoryDetailOutput;
-import com.mtcarpenter.mall.common.SmsCouponHistoryOutput;
 import com.mtcarpenter.mall.common.api.CommonResult;
-//import com.mtcarpenter.mall.model.SmsCouponHistory;
-//import com.mtcarpenter.mall.portal.domain.CartPromotionItem;
-//import com.mtcarpenter.mall.portal.domain.SmsCouponHistoryDetail;
-//import com.mtcarpenter.mall.portal.service.OmsCartItemService;
-//import com.mtcarpenter.mall.portal.service.UmsMemberCouponService;
+import com.mtcarpenter.mall.domain.SmsCouponHistoryDetail;
+import com.mtcarpenter.mall.model.SmsCouponHistory;
 import com.mtcarpenter.mall.portal.service.UmsMemberCouponService;
 import com.mtcarpenter.mall.portal.service.UmsMemberService;
 import io.swagger.annotations.Api;
@@ -47,8 +42,8 @@ public class UmsMemberCouponController {
             allowableValues = "0,1,2", paramType = "query", dataType = "integer")
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
-    public CommonResult<List<SmsCouponHistoryOutput>> list(@RequestParam(value = "useStatus", required = false) Integer useStatus) {
-        List<SmsCouponHistoryOutput> couponHistoryList = memberCouponService.list(useStatus);
+    public CommonResult<List<SmsCouponHistory>> list(@RequestParam(value = "useStatus", required = false) Integer useStatus) {
+        List<SmsCouponHistory> couponHistoryList = memberCouponService.list(useStatus);
         return CommonResult.success(couponHistoryList);
     }
 
@@ -57,8 +52,8 @@ public class UmsMemberCouponController {
             defaultValue = "1", allowableValues = "0,1", paramType = "query", dataType = "integer")
     @RequestMapping(value = "/list/cart/{type}", method = RequestMethod.GET)
     @ResponseBody
-    public CommonResult<List<SmsCouponHistoryDetailOutput>> listCart(@PathVariable Integer type) {
-        List<SmsCouponHistoryDetailOutput> couponHistoryList = memberCouponService.listCart(type);
+    public CommonResult<List<SmsCouponHistoryDetail>> listCart(@PathVariable Integer type) {
+        List<SmsCouponHistoryDetail> couponHistoryList = memberCouponService.listCart(type);
         return CommonResult.success(couponHistoryList);
     }
 }

@@ -1,23 +1,20 @@
 package com.mtcarpenter.mall.portal.controller;
 
-import com.mtcarpenter.mall.common.CartProductOutput;
-import com.mtcarpenter.mall.common.CartPromotionItemOutput;
-import com.mtcarpenter.mall.common.UmsMemberOutput;
+import com.mtcarpenter.mall.domain.CartProduct;
 import com.mtcarpenter.mall.common.api.CommonResult;
 import com.mtcarpenter.mall.model.OmsCartItem;
-import com.mtcarpenter.mall.portal.domain.CartPromotionItem;
+import com.mtcarpenter.mall.domain.CartPromotionItem;
+import com.mtcarpenter.mall.model.UmsMember;
 import com.mtcarpenter.mall.portal.service.OmsCartItemService;
 import com.mtcarpenter.mall.portal.util.MemberUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 购物车管理Controller
@@ -51,7 +48,7 @@ public class OmsCartItemController {
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
     public CommonResult<List<OmsCartItem>> list() {
-        UmsMemberOutput umsMember = memberUtil.getRedisUmsMember(request);
+        UmsMember umsMember = memberUtil.getRedisUmsMember(request);
         List<OmsCartItem> cartItemList = cartItemService.list(umsMember.getId());
         return CommonResult.success(cartItemList);
     }
@@ -59,15 +56,10 @@ public class OmsCartItemController {
     @ApiOperation("获取某个会员的购物车列表,包括促销信息")
     @RequestMapping(value = "/list/promotion", method = RequestMethod.GET)
     @ResponseBody
-    public CommonResult<List<CartPromotionItemOutput>> listPromotion(@RequestParam(required = false) List<Long> cartIds) {
-        UmsMemberOutput umsMember = memberUtil.getRedisUmsMember(request);
+    public CommonResult<List<CartPromotionItem>> listPromotion(@RequestParam(required = false) List<Long> cartIds) {
+        UmsMember umsMember = memberUtil.getRedisUmsMember(request);
         List<CartPromotionItem> cartPromotionItemList = cartItemService.listPromotion(umsMember.getId(), cartIds);
-        List<CartPromotionItemOutput> cartPromotionItemOutputs = cartPromotionItemList.stream().map(c -> {
-            CartPromotionItemOutput cartPromotionItemOutput = new CartPromotionItemOutput();
-            BeanUtils.copyProperties(c, cartPromotionItemOutput);
-            return cartPromotionItemOutput;
-        }).collect(Collectors.toList());
-        return CommonResult.success(cartPromotionItemOutputs);
+        return CommonResult.success(cartPromotionItemList);
     }
 
     @ApiOperation("修改购物车中某个商品的数量")
@@ -75,7 +67,7 @@ public class OmsCartItemController {
     @ResponseBody
     public CommonResult updateQuantity(@RequestParam Long id,
                                        @RequestParam Integer quantity) {
-        UmsMemberOutput umsMember = memberUtil.getRedisUmsMember(request);
+        UmsMember umsMember = memberUtil.getRedisUmsMember(request);
         int count = cartItemService.updateQuantity(id, umsMember.getId(), quantity);
         if (count > 0) {
             return CommonResult.success(count);
@@ -86,8 +78,8 @@ public class OmsCartItemController {
     @ApiOperation("获取购物车中某个商品的规格,用于重选规格")
     @RequestMapping(value = "/getProduct/{productId}", method = RequestMethod.GET)
     @ResponseBody
-    public CommonResult<CartProductOutput> getCartProduct(@PathVariable Long productId) {
-        CartProductOutput cartProduct = cartItemService.getCartProduct(productId);
+    public CommonResult<CartProduct> getCartProduct(@PathVariable Long productId) {
+        CartProduct cartProduct = cartItemService.getCartProduct(productId);
         return CommonResult.success(cartProduct);
     }
 
@@ -106,7 +98,7 @@ public class OmsCartItemController {
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @ResponseBody
     public CommonResult delete(@RequestParam("ids") List<Long> ids) {
-        UmsMemberOutput umsMember = memberUtil.getRedisUmsMember(request);
+        UmsMember umsMember = memberUtil.getRedisUmsMember(request);
         int count = cartItemService.delete(umsMember.getId(), ids);
         if (count > 0) {
             return CommonResult.success(count);
@@ -118,7 +110,7 @@ public class OmsCartItemController {
     @RequestMapping(value = "/clear", method = RequestMethod.POST)
     @ResponseBody
     public CommonResult clear() {
-        UmsMemberOutput umsMember = memberUtil.getRedisUmsMember(request);
+        UmsMember umsMember = memberUtil.getRedisUmsMember(request);
         int count = cartItemService.clear(umsMember.getId());
         if (count > 0) {
             return CommonResult.success(count);

@@ -1,9 +1,8 @@
 package com.mtcarpenter.mall.portal.service;
 
-import com.mtcarpenter.mall.common.CartProductOutput;
-import com.mtcarpenter.mall.common.PromotionProductOutput;
+import com.mtcarpenter.mall.domain.CartProduct;
+import com.mtcarpenter.mall.domain.PromotionProduct;
 import com.mtcarpenter.mall.model.PmsProduct;
-import com.mtcarpenter.mall.portal.domain.CartProduct;
 import com.mtcarpenter.mall.portal.domain.PmsPortalProductDetail;
 import com.mtcarpenter.mall.portal.domain.PmsProductCategoryNode;
 
@@ -35,7 +34,7 @@ public interface PmsPortalProductService {
      * @param productId
      * @return
      */
-    CartProductOutput getCartProduct(Long productId);
+    CartProduct getCartProduct(Long productId);
 
     /**
      * 获取促销商品
@@ -43,7 +42,7 @@ public interface PmsPortalProductService {
      * @param productIdList
      * @return
      */
-    List<PromotionProductOutput> getPromotionProductList(List<Long> productIdList);
+    List<PromotionProduct> getPromotionProductList(List<Long> productIdList);
 
 
     /**

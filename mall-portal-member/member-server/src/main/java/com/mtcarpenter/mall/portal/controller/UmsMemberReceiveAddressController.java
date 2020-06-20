@@ -1,12 +1,10 @@
 package com.mtcarpenter.mall.portal.controller;
 
-import com.mtcarpenter.mall.common.UmsMemberReceiveAddressOutput;
 import com.mtcarpenter.mall.common.api.CommonResult;
 import com.mtcarpenter.mall.model.UmsMemberReceiveAddress;
 import com.mtcarpenter.mall.portal.service.UmsMemberReceiveAddressService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -60,18 +58,16 @@ public class UmsMemberReceiveAddressController {
     @ApiOperation("显示所有收货地址")
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
-    public CommonResult<List<UmsMemberReceiveAddressOutput>> list(@RequestParam(value = "memberId",required = false) Long memberId) {
-        List<UmsMemberReceiveAddressOutput> addressList = memberReceiveAddressService.list(memberId);
+    public CommonResult<List<UmsMemberReceiveAddress>> list(@RequestParam(value = "memberId",required = false) Long memberId) {
+        List<UmsMemberReceiveAddress> addressList = memberReceiveAddressService.list(memberId);
         return CommonResult.success(addressList);
     }
 
     @ApiOperation("获取收货地址详情")
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ResponseBody
-    public CommonResult<UmsMemberReceiveAddressOutput> getItem(@PathVariable Long id) {
+    public CommonResult<UmsMemberReceiveAddress> getItem(@PathVariable Long id) {
         UmsMemberReceiveAddress address = memberReceiveAddressService.getItem(id);
-        UmsMemberReceiveAddressOutput umsMemberReceiveAddressOutput = new UmsMemberReceiveAddressOutput();
-        BeanUtils.copyProperties(address, umsMemberReceiveAddressOutput);
-        return CommonResult.success(umsMemberReceiveAddressOutput);
+        return CommonResult.success(address);
     }
 }

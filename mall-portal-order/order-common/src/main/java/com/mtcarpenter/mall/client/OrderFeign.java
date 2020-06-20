@@ -1,7 +1,7 @@
 package com.mtcarpenter.mall.client;
 
-import com.mtcarpenter.mall.common.CartPromotionItemOutput;
 import com.mtcarpenter.mall.common.api.CommonResult;
+import com.mtcarpenter.mall.domain.CartPromotionItem;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -20,6 +20,6 @@ public interface OrderFeign {
     /**
      * 获取某个会员的购物车列表,包括促销信息
      */
-    @RequestMapping(value = "/list/promotion", method = RequestMethod.GET)
-    CommonResult<List<CartPromotionItemOutput>> listPromotion(@RequestParam(required = false) List<Long> cartIds);
+    @RequestMapping(value = "/cart/list/promotion", method = RequestMethod.GET)
+    CommonResult<List<CartPromotionItem>> listPromotion(@RequestParam(required = false) List<Long> cartIds);
 }

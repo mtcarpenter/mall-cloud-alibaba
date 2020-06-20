@@ -1,10 +1,9 @@
 package com.mtcarpenter.mall.portal.service.impl;
 
 import com.mtcarpenter.mall.client.CouponFeign;
-import com.mtcarpenter.mall.common.SmsCouponHistoryDetailOutput;
-import com.mtcarpenter.mall.common.SmsCouponHistoryOutput;
 import com.mtcarpenter.mall.common.api.CommonResult;
 import com.mtcarpenter.mall.common.api.ResultCode;
+import com.mtcarpenter.mall.domain.SmsCouponHistoryDetail;
 import com.mtcarpenter.mall.model.*;
 import com.mtcarpenter.mall.portal.service.UmsMemberCouponService;
 import com.mtcarpenter.mall.portal.service.UmsMemberService;
@@ -33,9 +32,9 @@ public class UmsMemberCouponServiceImpl implements UmsMemberCouponService {
 
 
     @Override
-    public List<SmsCouponHistoryOutput> list(Integer useStatus) {
+    public List<SmsCouponHistory> list(Integer useStatus) {
         UmsMember currentMember = memberService.getCurrentMember();
-        CommonResult<List<SmsCouponHistoryOutput>> result = couponFeign.list(currentMember.getId(), useStatus);
+        CommonResult<List<SmsCouponHistory>> result = couponFeign.list(currentMember.getId(), useStatus);
         if (result.getCode() == ResultCode.SUCCESS.getCode()) {
             return result.getData();
         }
@@ -43,9 +42,9 @@ public class UmsMemberCouponServiceImpl implements UmsMemberCouponService {
     }
 
     @Override
-    public List<SmsCouponHistoryDetailOutput> listCart(Integer type) {
+    public List<SmsCouponHistoryDetail> listCart(Integer type) {
         UmsMember currentMember = memberService.getCurrentMember();
-        CommonResult<List<SmsCouponHistoryDetailOutput>> result = couponFeign.listCart(type, currentMember.getId());
+        CommonResult<List<SmsCouponHistoryDetail>> result = couponFeign.listCart(type, currentMember.getId());
         if (result.getCode() == ResultCode.SUCCESS.getCode()) {
             return result.getData();
         }

@@ -36,9 +36,4 @@ public interface HomeDao {
      */
     List<PmsProduct> getHotProductList(@Param("offset") Integer offset, @Param("limit") Integer limit);
 
-    /**
-     * @todo 待分离
-     * 获取推荐专题
-     */
-    List<CmsSubject> getRecommendSubjectList(@Param("offset") Integer offset, @Param("limit") Integer limit);
 }

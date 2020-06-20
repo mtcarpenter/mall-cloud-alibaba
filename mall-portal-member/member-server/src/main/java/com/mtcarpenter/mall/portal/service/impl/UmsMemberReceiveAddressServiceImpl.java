@@ -1,19 +1,16 @@
 package com.mtcarpenter.mall.portal.service.impl;
 
-import com.mtcarpenter.mall.common.UmsMemberReceiveAddressOutput;
 import com.mtcarpenter.mall.mapper.UmsMemberReceiveAddressMapper;
 import com.mtcarpenter.mall.model.UmsMember;
 import com.mtcarpenter.mall.model.UmsMemberReceiveAddress;
 import com.mtcarpenter.mall.model.UmsMemberReceiveAddressExample;
 import com.mtcarpenter.mall.portal.service.UmsMemberReceiveAddressService;
 import com.mtcarpenter.mall.portal.service.UmsMemberService;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 用户地址管理Service实现类
@@ -50,20 +47,14 @@ public class UmsMemberReceiveAddressServiceImpl implements UmsMemberReceiveAddre
     }
 
     @Override
-    public List<UmsMemberReceiveAddressOutput> list(Long memberId) {
+    public List<UmsMemberReceiveAddress> list(Long memberId) {
         UmsMember currentMember = memberService.getCurrentMember();
         if (memberId != null){
             currentMember = memberService.getById(memberId);
         }
         UmsMemberReceiveAddressExample example = new UmsMemberReceiveAddressExample();
         example.createCriteria().andMemberIdEqualTo(currentMember.getId());
-        List<UmsMemberReceiveAddress> umsMemberReceiveAddresses = addressMapper.selectByExample(example);
-        List<UmsMemberReceiveAddressOutput> receiveAddressOutputs = umsMemberReceiveAddresses.stream().map(u -> {
-            UmsMemberReceiveAddressOutput umsMemberReceiveAddressOutput = new UmsMemberReceiveAddressOutput();
-            BeanUtils.copyProperties(u, umsMemberReceiveAddresses);
-            return umsMemberReceiveAddressOutput;
-        }).collect(Collectors.toList());
-        return receiveAddressOutputs;
+        return addressMapper.selectByExample(example);
     }
 
     @Override

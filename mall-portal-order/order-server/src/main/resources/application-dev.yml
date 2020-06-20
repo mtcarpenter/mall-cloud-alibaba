@@ -1,5 +1,4 @@
-server:
-  port: 8071
+
 
 spring:
   datasource:
@@ -23,7 +22,13 @@ spring:
     port: 6379 # Redis服务器连接端口
     password: # Redis服务器连接密码（默认为空）
     timeout: 300ms # 连接超时时间（毫秒）
-
+  rabbitmq:
+    host: localhost
+    port: 5672
+    virtual-host: /
+    username: guest
+    password: guest
+    publisher-confirms: true #如果对异步消息需要回调必须设置为true
 
 # 日志配置
 logging:

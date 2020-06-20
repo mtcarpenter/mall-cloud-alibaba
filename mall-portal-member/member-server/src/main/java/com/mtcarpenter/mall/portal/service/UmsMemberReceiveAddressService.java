@@ -1,6 +1,5 @@
 package com.mtcarpenter.mall.portal.service;
 
-import com.mtcarpenter.mall.common.UmsMemberReceiveAddressOutput;
 import com.mtcarpenter.mall.model.UmsMemberReceiveAddress;
 
 import java.util.List;
@@ -31,8 +30,9 @@ public interface UmsMemberReceiveAddressService {
     /**
      * 返回当前用户的收货地址
      * @param memberId
+     * @return
      */
-    List<UmsMemberReceiveAddressOutput> list(Long memberId);
+    List<UmsMemberReceiveAddress> list(Long memberId);
 
     /**
      * 获取地址详情

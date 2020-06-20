@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mtcarpenter.mall.portal.dao.PortalProductDao">
-    <resultMap id="cartProductMap" type="com.mtcarpenter.mall.portal.domain.CartProduct" autoMapping="true">
+    <resultMap id="cartProductMap" type="com.mtcarpenter.mall.domain.CartProduct" autoMapping="true">
         <id column="id" jdbcType="BIGINT" property="id"/>
         <collection property="productAttributeList" columnPrefix="attr_"
                     resultMap="com.mtcarpenter.mall.mapper.PmsProductAttributeMapper.BaseResultMap">
@@ -10,7 +10,7 @@
                     resultMap="com.mtcarpenter.mall.mapper.PmsSkuStockMapper.BaseResultMap">
         </collection>
     </resultMap>
-    <resultMap id="promotionProductMap" type="com.mtcarpenter.mall.common.PromotionProductOutput"
+    <resultMap id="promotionProductMap" type="com.mtcarpenter.mall.domain.PromotionProduct"
                extends="com.mtcarpenter.mall.mapper.PmsProductMapper.BaseResultMap">
         <id column="id" jdbcType="BIGINT" property="id"/>
         <collection property="skuStockList" columnPrefix="sku_"
@@ -78,31 +78,5 @@
             #{id}
         </foreach>
     </select>
-    <select id="getAvailableCouponList" resultMap="com.mtcarpenter.mall.mapper.SmsCouponMapper.BaseResultMap">
-        SELECT *
-        FROM sms_coupon
-        WHERE use_type = 0
-          AND start_time &lt; NOW()
-          AND end_time &gt; NOW()
-        UNION
-        (
-            SELECT c.*
-            FROM sms_coupon_product_category_relation cpc
-                     LEFT JOIN sms_coupon c ON cpc.coupon_id = c.id
-            WHERE c.use_type = 1
-              AND c.start_time &lt; NOW()
-              AND c.end_time &gt; NOW()
-              AND cpc.product_category_id = #{productCategoryId}
-        )
-        UNION
-        (
-            SELECT c.*
-            FROM sms_coupon_product_relation cp
-                     LEFT JOIN sms_coupon c ON cp.coupon_id = c.id
-            WHERE c.use_type = 2
-              AND c.start_time &lt; NOW()
-              AND c.end_time &gt; NOW()
-              AND cp.product_id = #{productId}
-        )
-    </select>
+
 </mapper>

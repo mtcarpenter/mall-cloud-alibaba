@@ -1,9 +1,11 @@
 package com.mtcarpenter.mall.portal.service;
 
-import com.mtcarpenter.mall.common.CartPromotionItemOutput;
-import com.mtcarpenter.mall.common.SmsCouponHistoryDetailOutput;
-import com.mtcarpenter.mall.common.SmsCouponHistoryOutput;
 
+import com.mtcarpenter.mall.domain.CartPromotionItem;
+import com.mtcarpenter.mall.domain.SmsCouponHistoryDetail;
+import com.mtcarpenter.mall.model.*;
+
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -28,7 +30,7 @@ public interface CouponService {
      * @param useStatus
      * @return
      */
-    List<SmsCouponHistoryOutput> list(Long memberId, Integer useStatus);
+    List<SmsCouponHistory> list(Long memberId, Integer useStatus);
 
     /**
      * 获取登录会员购物车的相关优惠券
@@ -38,7 +40,7 @@ public interface CouponService {
      * @param type
      * @return
      */
-    List<SmsCouponHistoryDetailOutput> listCart(List<CartPromotionItemOutput> cartPromotionItemList, Long memberId, Integer type);
+    List<SmsCouponHistoryDetail> listCart(List<CartPromotionItem> cartPromotionItemList, Long memberId, Integer type);
 
     /**
      * 将优惠券信息更改为指定状态
@@ -49,4 +51,38 @@ public interface CouponService {
      */
     void updateCouponStatus(Long couponId, Long memberId, Integer useStatus);
 
+    /**
+     * 商品优惠券
+     * @param productId
+     * @param productCategoryId
+     * @return
+     */
+    List<SmsCoupon> getAvailableCouponList(Long productId, Long productCategoryId);
+
+    /**
+     * 获取下一个场次
+     * @param date
+     * @return
+     */
+    SmsFlashPromotionSession getNextFlashPromotionSession(Date date);
+
+    /**
+     * 获取首页广告
+     * @return
+     */
+    List<SmsHomeAdvertise> getHomeAdvertiseList();
+
+    /**
+     * 根据时间获取秒杀活动
+     * @param date
+     * @return
+     */
+    SmsFlashPromotion getFlashPromotion(Date date);
+
+    /**
+     * 根据时间获取秒杀场次
+     * @param date
+     * @return
+     */
+    SmsFlashPromotionSession getFlashPromotionSession(Date date);
 }

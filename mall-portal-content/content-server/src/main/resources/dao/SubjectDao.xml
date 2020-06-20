@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mtcarpenter.mall.portal.dao.SubjectDao">
+    <select id="getRecommendSubjectList" resultMap="com.mtcarpenter.mall.mapper.CmsSubjectMapper.BaseResultMap">
+        SELECT s.*
+        FROM
+            sms_home_recommend_subject hs
+            LEFT JOIN cms_subject s ON hs.subject_id = s.id
+        WHERE
+            hs.recommend_status = 1
+            AND s.show_status = 1
+        ORDER BY
+            hs.sort DESC
+        LIMIT #{offset}, #{limit};
+    </select>
+</mapper>

@@ -2,20 +2,23 @@ package com.mtcarpenter.mall.portal.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import com.mtcarpenter.mall.client.ProductFeign;
-import com.mtcarpenter.mall.common.CartProductOutput;
 import com.mtcarpenter.mall.common.api.CommonResult;
 import com.mtcarpenter.mall.common.api.ResultCode;
+import com.mtcarpenter.mall.domain.CartProduct;
 import com.mtcarpenter.mall.mapper.OmsCartItemMapper;
 import com.mtcarpenter.mall.model.OmsCartItem;
 import com.mtcarpenter.mall.model.OmsCartItemExample;
-import com.mtcarpenter.mall.portal.domain.CartPromotionItem;
+import com.mtcarpenter.mall.domain.CartPromotionItem;
+import com.mtcarpenter.mall.model.UmsMember;
 import com.mtcarpenter.mall.portal.service.OmsCartItemService;
 import com.mtcarpenter.mall.portal.service.OmsPromotionService;
+import com.mtcarpenter.mall.portal.util.MemberUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -36,16 +39,18 @@ public class OmsCartItemServiceImpl implements OmsCartItemService {
     @Autowired
     private ProductFeign productFeign;
 
-// @todo
-    //    @Autowired
-//    private UmsMemberService memberService;
+    @Autowired
+    private MemberUtil memberUtil;
+
+    @Autowired
+    private HttpServletRequest request;
 
     @Override
     public int add(OmsCartItem cartItem) {
         int count;
-//        UmsMember currentMember =memberService.getCurrentMember();
-//        cartItem.setMemberId(currentMember.getId());
-//        cartItem.setMemberNickname(currentMember.getNickname());
+        UmsMember currentMember =memberUtil.getRedisUmsMember(request);
+        cartItem.setMemberId(currentMember.getId());
+        cartItem.setMemberNickname(currentMember.getNickname());
         cartItem.setDeleteStatus(0);
         OmsCartItem existCartItem = getCartItem(cartItem);
         if (existCartItem == null) {
@@ -116,8 +121,8 @@ public class OmsCartItemServiceImpl implements OmsCartItemService {
     }
 
     @Override
-    public CartProductOutput getCartProduct(Long productId) {
-        CommonResult<CartProductOutput> result = productFeign.getCartProduct(productId);
+    public CartProduct getCartProduct(Long productId) {
+        CommonResult<CartProduct> result = productFeign.getCartProduct(productId);
         if (result.getCode() == ResultCode.SUCCESS.getCode()){
             return result.getData();
         }

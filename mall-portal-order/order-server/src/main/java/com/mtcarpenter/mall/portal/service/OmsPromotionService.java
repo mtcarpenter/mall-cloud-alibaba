@@ -1,7 +1,7 @@
 package com.mtcarpenter.mall.portal.service;
 
 import com.mtcarpenter.mall.model.OmsCartItem;
-import com.mtcarpenter.mall.portal.domain.CartPromotionItem;
+import com.mtcarpenter.mall.domain.CartPromotionItem;
 
 import java.util.List;
 

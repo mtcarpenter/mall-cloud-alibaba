@@ -1,7 +1,7 @@
 package com.mtcarpenter.mall.client;
 
-import com.mtcarpenter.mall.common.UmsIntegrationConsumeSettingOutput;
-import com.mtcarpenter.mall.common.UmsMemberReceiveAddressOutput;
+import com.mtcarpenter.mall.model.UmsIntegrationConsumeSetting;
+import com.mtcarpenter.mall.model.UmsMemberReceiveAddress;
 import com.mtcarpenter.mall.common.api.CommonResult;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +23,7 @@ public interface MemberFeign {
      * @return
      */
     @RequestMapping(value = "/member/address/list", method = RequestMethod.GET)
-    CommonResult<List<UmsMemberReceiveAddressOutput>> list(@RequestParam(value = "memberId", required = false) Long memberId);
+    CommonResult<List<UmsMemberReceiveAddress>> list(@RequestParam(value = "memberId", required = false) Long memberId);
 
 
     /**
@@ -33,7 +33,7 @@ public interface MemberFeign {
      * @return
      */
     @RequestMapping(value = "/member/productCollection/integrationConsumeSetting", method = RequestMethod.GET)
-    CommonResult<UmsIntegrationConsumeSettingOutput> integrationConsumeSetting(@RequestParam(value = "id", defaultValue = "1") Long id);
+    CommonResult<UmsIntegrationConsumeSetting> integrationConsumeSetting(@RequestParam(value = "id", defaultValue = "1") Long id);
 
 
     /**
@@ -43,7 +43,7 @@ public interface MemberFeign {
      * @return
      */
     @RequestMapping(value = "/member/address/{id}", method = RequestMethod.GET)
-    CommonResult<UmsMemberReceiveAddressOutput> getItem(@PathVariable Long id);
+    CommonResult<UmsMemberReceiveAddress> getItem(@PathVariable Long id);
 
 
     /**

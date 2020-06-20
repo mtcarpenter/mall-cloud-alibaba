@@ -6,11 +6,10 @@ import com.github.pagehelper.PageHelper;
 import com.mtcarpenter.mall.client.CouponFeign;
 import com.mtcarpenter.mall.client.MemberFeign;
 import com.mtcarpenter.mall.client.ProductFeign;
-import com.mtcarpenter.mall.common.*;
 import com.mtcarpenter.mall.common.api.CommonPage;
-import com.mtcarpenter.mall.common.api.ResultCode;
-import com.mtcarpenter.mall.common.exception.ApiException;
 import com.mtcarpenter.mall.common.exception.Asserts;
+import com.mtcarpenter.mall.domain.CartPromotionItem;
+import com.mtcarpenter.mall.domain.SmsCouponHistoryDetail;
 import com.mtcarpenter.mall.mapper.*;
 import com.mtcarpenter.mall.model.*;
 import com.mtcarpenter.mall.portal.component.CancelOrderSender;
@@ -21,9 +20,7 @@ import com.mtcarpenter.mall.portal.service.*;
 import com.mtcarpenter.mall.portal.util.JwtTokenUtil;
 import com.mtcarpenter.mall.portal.util.MemberUtil;
 import com.mtcarpenter.mall.security.service.RedisService;
-import io.micrometer.core.instrument.util.StringUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -94,24 +91,19 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
     public ConfirmOrderResult generateConfirmOrder(List<Long> cartIds) {
         ConfirmOrderResult result = new ConfirmOrderResult();
         //获取购物车信息 redis 中获取
-        UmsMemberOutput currentMember = memberUtil.getRedisUmsMember(request);
+        UmsMember currentMember = memberUtil.getRedisUmsMember(request);
         List<CartPromotionItem> cartPromotionItemList = cartItemService.listPromotion(currentMember.getId(), cartIds);
         result.setCartPromotionItemList(cartPromotionItemList);
         //获取用户收货地址列表
-        List<UmsMemberReceiveAddressOutput> memberReceiveAddressList = memberFeign.list(currentMember.getId()).getData();
+        List<UmsMemberReceiveAddress> memberReceiveAddressList = memberFeign.list(currentMember.getId()).getData();
         result.setMemberReceiveAddressList(memberReceiveAddressList);
         //获取用户可用优惠券列表
-        List<CartPromotionItemOutput> cartPromotionItemOutputs = cartPromotionItemList.stream().map(c -> {
-            CartPromotionItemOutput cartPromotionItemOutput = new CartPromotionItemOutput();
-            BeanUtils.copyProperties(c, cartPromotionItemOutput);
-            return cartPromotionItemOutput;
-        }).collect(Collectors.toList());
-        List<SmsCouponHistoryDetailOutput> couponHistoryDetailList = couponFeign.listCartPromotion(1, cartPromotionItemOutputs, currentMember.getId()).getData();
+        List<SmsCouponHistoryDetail> couponHistoryDetailList = couponFeign.listCartPromotion(1, cartPromotionItemList, currentMember.getId()).getData();
         result.setCouponHistoryDetailList(couponHistoryDetailList);
         //获取用户积分
         result.setMemberIntegration(currentMember.getIntegration());
         //获取积分使用规则
-        UmsIntegrationConsumeSettingOutput integrationConsumeSetting = memberFeign.integrationConsumeSetting(1L).getData();
+        UmsIntegrationConsumeSetting integrationConsumeSetting = memberFeign.integrationConsumeSetting(1L).getData();
         result.setIntegrationConsumeSetting(integrationConsumeSetting);
         //计算总金额、活动优惠、应付金额
         ConfirmOrderResult.CalcAmount calcAmount = calcCartAmount(cartPromotionItemList);
@@ -123,7 +115,7 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
     public Map<String, Object> generateOrder(OrderParam orderParam) {
         List<OmsOrderItem> orderItemList = new ArrayList<>();
         //获取购物车及优惠信息  redis
-        UmsMemberOutput currentMember = memberUtil.getRedisUmsMember(request);
+        UmsMember currentMember = memberUtil.getRedisUmsMember(request);
         List<CartPromotionItem> cartPromotionItemList = cartItemService.listPromotion(currentMember.getId(), orderParam.getCartIds());
         for (CartPromotionItem cartPromotionItem : cartPromotionItemList) {
             //生成下单商品信息
@@ -157,7 +149,7 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
             }
         } else {
             //使用优惠券
-            SmsCouponHistoryDetailOutput couponHistoryDetail = getUseCoupon(cartPromotionItemList, orderParam.getCouponId());
+            SmsCouponHistoryDetail couponHistoryDetail = getUseCoupon(cartPromotionItemList, orderParam.getCouponId());
             if (couponHistoryDetail == null) {
                 Asserts.fail("该优惠券不可用");
             }
@@ -222,7 +214,7 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
         //订单类型：0->正常订单；1->秒杀订单
         order.setOrderType(0);
         //收货人信息：姓名、电话、邮编、地址
-        UmsMemberReceiveAddressOutput address = memberFeign.getItem(orderParam.getMemberReceiveAddressId()).getData();
+        UmsMemberReceiveAddress address = memberFeign.getItem(orderParam.getMemberReceiveAddressId()).getData();
         order.setReceiverName(address.getName());
         order.setReceiverPhone(address.getPhoneNumber());
         order.setReceiverPostCode(address.getPostCode());
@@ -357,7 +349,7 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
     @Override
     public void confirmReceiveOrder(Long orderId) {
         // redis 用户信息
-        UmsMemberOutput member = memberUtil.getRedisUmsMember(request);
+        UmsMember member = memberUtil.getRedisUmsMember(request);
         OmsOrder order = orderMapper.selectByPrimaryKey(orderId);
         if (!member.getId().equals(order.getMemberId())) {
             Asserts.fail("不能确认他人订单！");
@@ -377,7 +369,7 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
             status = null;
         }
         // redis 中用户信息
-        UmsMemberOutput member = memberUtil.getRedisUmsMember(request);
+        UmsMember member = memberUtil.getRedisUmsMember(request);
         PageHelper.startPage(pageNum, pageSize);
         OmsOrderExample orderExample = new OmsOrderExample();
         OmsOrderExample.Criteria criteria = orderExample.createCriteria();
@@ -430,7 +422,7 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
     @Override
     public void deleteOrder(Long orderId) {
         // redis 用户信息
-        UmsMemberOutput member = memberUtil.getRedisUmsMember(request);
+        UmsMember member = memberUtil.getRedisUmsMember(request);
         OmsOrder order = orderMapper.selectByPrimaryKey(orderId);
         if (!member.getId().equals(order.getMemberId())) {
             Asserts.fail("不能删除他人订单！");
@@ -466,7 +458,7 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
     /**
      * 删除下单商品的购物车信息
      */
-    private void deleteCartItemList(List<CartPromotionItem> cartPromotionItemList, UmsMemberOutput currentMember) {
+    private void deleteCartItemList(List<CartPromotionItem> cartPromotionItemList, UmsMember currentMember) {
         List<Long> ids = new ArrayList<>();
         for (CartPromotionItem cartPromotionItem : cartPromotionItemList) {
             ids.add(cartPromotionItem.getId());
@@ -584,7 +576,7 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
      * @param currentMember  使用的用户
      * @param hasCoupon      是否已经使用优惠券
      */
-    private BigDecimal getUseIntegrationAmount(Integer useIntegration, BigDecimal totalAmount, UmsMemberOutput currentMember, boolean hasCoupon) {
+    private BigDecimal getUseIntegrationAmount(Integer useIntegration, BigDecimal totalAmount, UmsMember currentMember, boolean hasCoupon) {
         BigDecimal zeroAmount = new BigDecimal(0);
         //判断用户是否有这么多积分
         if (useIntegration.compareTo(currentMember.getIntegration()) > 0) {
@@ -592,7 +584,7 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
         }
         //根据积分使用规则判断是否可用
         //是否可与优惠券共用
-        UmsIntegrationConsumeSettingOutput integrationConsumeSetting = memberFeign.integrationConsumeSetting(1L).getData();
+        UmsIntegrationConsumeSetting integrationConsumeSetting = memberFeign.integrationConsumeSetting(1L).getData();
         if (hasCoupon && integrationConsumeSetting.getCouponStatus().equals(0)) {
             //不可与优惠券共用
             return zeroAmount;
@@ -616,8 +608,8 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
      * @param orderItemList       order_item列表
      * @param couponHistoryDetail 可用优惠券详情
      */
-    private void handleCouponAmount(List<OmsOrderItem> orderItemList, SmsCouponHistoryDetailOutput couponHistoryDetail) {
-        SmsCouponOutput coupon = couponHistoryDetail.getCoupon();
+    private void handleCouponAmount(List<OmsOrderItem> orderItemList, SmsCouponHistoryDetail couponHistoryDetail) {
+        SmsCoupon coupon = couponHistoryDetail.getCoupon();
         if (coupon.getUseType().equals(0)) {
             //全场通用
             calcPerCouponAmount(orderItemList, coupon);
@@ -637,7 +629,7 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
      *
      * @param orderItemList 可用优惠券的下单商品商品
      */
-    private void calcPerCouponAmount(List<OmsOrderItem> orderItemList, SmsCouponOutput coupon) {
+    private void calcPerCouponAmount(List<OmsOrderItem> orderItemList, SmsCoupon coupon) {
         BigDecimal totalAmount = calcTotalAmount(orderItemList);
         for (OmsOrderItem orderItem : orderItemList) {
             //(商品价格/可用商品总价)*优惠券面额
@@ -653,11 +645,11 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
      * @param orderItemList       下单商品
      * @param type                使用关系类型：0->相关分类；1->指定商品
      */
-    private List<OmsOrderItem> getCouponOrderItemByRelation(SmsCouponHistoryDetailOutput couponHistoryDetail, List<OmsOrderItem> orderItemList, int type) {
+    private List<OmsOrderItem> getCouponOrderItemByRelation(SmsCouponHistoryDetail couponHistoryDetail, List<OmsOrderItem> orderItemList, int type) {
         List<OmsOrderItem> result = new ArrayList<>();
         if (type == 0) {
             List<Long> categoryIdList = new ArrayList<>();
-            for (SmsCouponProductCategoryRelationOutput productCategoryRelation : couponHistoryDetail.getCategoryRelationList()) {
+            for (SmsCouponProductCategoryRelation productCategoryRelation : couponHistoryDetail.getCategoryRelationList()) {
                 categoryIdList.add(productCategoryRelation.getProductCategoryId());
             }
             for (OmsOrderItem orderItem : orderItemList) {
@@ -669,7 +661,7 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
             }
         } else if (type == 1) {
             List<Long> productIdList = new ArrayList<>();
-            for (SmsCouponProductRelationOutput productRelation : couponHistoryDetail.getProductRelationList()) {
+            for (SmsCouponProductRelation productRelation : couponHistoryDetail.getProductRelationList()) {
                 productIdList.add(productRelation.getProductId());
             }
             for (OmsOrderItem orderItem : orderItemList) {
@@ -689,14 +681,9 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
      * @param cartPromotionItemList 购物车优惠列表
      * @param couponId              使用优惠券id
      */
-    private SmsCouponHistoryDetailOutput getUseCoupon(List<CartPromotionItem> cartPromotionItemList, Long couponId) {
-        List<CartPromotionItemOutput> promotionItems = cartPromotionItemList.stream().map(m -> {
-            CartPromotionItemOutput cartPromotionItem = new CartPromotionItemOutput();
-            BeanUtils.copyProperties(m, cartPromotionItem);
-            return cartPromotionItem;
-        }).collect(Collectors.toList());
-        List<SmsCouponHistoryDetailOutput> couponHistoryDetailList = couponFeign.listCartPromotion(1, promotionItems, memberUtil.getRedisUmsMember(request).getId()).getData();
-        for (SmsCouponHistoryDetailOutput couponHistoryDetail : couponHistoryDetailList) {
+    private SmsCouponHistoryDetail getUseCoupon(List<CartPromotionItem> cartPromotionItemList, Long couponId) {
+        List<SmsCouponHistoryDetail> couponHistoryDetailList = couponFeign.listCartPromotion(1, cartPromotionItemList, memberUtil.getRedisUmsMember(request).getId()).getData();
+        for (SmsCouponHistoryDetail couponHistoryDetail : couponHistoryDetailList) {
             if (couponHistoryDetail.getCoupon().getId().equals(couponId)) {
                 return couponHistoryDetail;
             }

@@ -1,8 +1,7 @@
 package com.mtcarpenter.mall.portal.service;
 
-import com.mtcarpenter.mall.common.CartPromotionItemOutput;
-import com.mtcarpenter.mall.common.SmsCouponHistoryDetailOutput;
-import com.mtcarpenter.mall.common.SmsCouponHistoryOutput;
+import com.mtcarpenter.mall.domain.SmsCouponHistoryDetail;
+import com.mtcarpenter.mall.model.SmsCouponHistory;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -23,7 +22,7 @@ public interface UmsMemberCouponService {
      *
      * @param useStatus 优惠券的使用状态
      */
-    List<SmsCouponHistoryOutput> list(Integer useStatus);
+    List<SmsCouponHistory> list(Integer useStatus);
 
     /**
      * 根据购物车信息获取可用优惠券
@@ -31,5 +30,5 @@ public interface UmsMemberCouponService {
      * @param type
      * @return
      */
-    List<SmsCouponHistoryDetailOutput> listCart(Integer type);
+    List<SmsCouponHistoryDetail> listCart(Integer type);
 }

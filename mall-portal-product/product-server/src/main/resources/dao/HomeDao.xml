@@ -61,16 +61,5 @@
         LIMIT #{offset}, #{limit};
     </select>
 
-    <select id="getRecommendSubjectList" resultMap="com.mtcarpenter.mall.mapper.CmsSubjectMapper.BaseResultMap">
-        SELECT s.*
-        FROM
-            sms_home_recommend_subject hs
-            LEFT JOIN cms_subject s ON hs.subject_id = s.id
-        WHERE
-            hs.recommend_status = 1
-            AND s.show_status = 1
-        ORDER BY
-            hs.sort DESC
-        LIMIT #{offset}, #{limit};
-    </select>
+
 </mapper>

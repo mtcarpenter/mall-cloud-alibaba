@@ -19,6 +19,7 @@
         <module>mall-portal-coupon</module>
         <module>mall-portal-order</module>
         <module>mall-portal-product</module>
+        <module>mall-portal-content</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>

@@ -1,15 +1,14 @@
 package com.mtcarpenter.mall.portal.service.impl;
 
-import com.mtcarpenter.mall.common.CartPromotionItemOutput;
-import com.mtcarpenter.mall.common.SmsCouponHistoryDetailOutput;
-import com.mtcarpenter.mall.common.SmsCouponHistoryOutput;
+
 import com.mtcarpenter.mall.common.exception.Asserts;
-import com.mtcarpenter.mall.mapper.SmsCouponHistoryMapper;
-import com.mtcarpenter.mall.mapper.SmsCouponMapper;
+import com.mtcarpenter.mall.domain.CartPromotionItem;
+import com.mtcarpenter.mall.domain.SmsCouponHistoryDetail;
+import com.mtcarpenter.mall.mapper.*;
 import com.mtcarpenter.mall.model.*;
 import com.mtcarpenter.mall.portal.dao.SmsCouponHistoryDao;
-import com.mtcarpenter.mall.portal.domain.SmsCouponHistoryDetail;
 import com.mtcarpenter.mall.portal.service.CouponService;
+import com.mtcarpenter.mall.portal.util.DateUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,6 +32,15 @@ public class CouponServiceImpl implements CouponService {
     private SmsCouponHistoryMapper couponHistoryMapper;
     @Autowired
     private SmsCouponHistoryDao couponHistoryDao;
+
+    @Autowired
+    private SmsHomeAdvertiseMapper advertiseMapper;
+
+    @Autowired
+    private SmsFlashPromotionSessionMapper promotionSessionMapper;
+    @Autowired
+    private SmsFlashPromotionMapper flashPromotionMapper;
+
 
     @Override
     public void add(Long couponId, Long memberId, String nickName) {
@@ -82,7 +90,7 @@ public class CouponServiceImpl implements CouponService {
      * @return
      */
     @Override
-    public List<SmsCouponHistoryOutput> list(Long memberId, Integer useStatus) {
+    public List<SmsCouponHistory> list(Long memberId, Integer useStatus) {
         SmsCouponHistoryExample couponHistoryExample = new SmsCouponHistoryExample();
         SmsCouponHistoryExample.Criteria criteria = couponHistoryExample.createCriteria();
         criteria.andMemberIdEqualTo(memberId);
@@ -90,12 +98,7 @@ public class CouponServiceImpl implements CouponService {
             criteria.andUseStatusEqualTo(useStatus);
         }
         List<SmsCouponHistory> smsCouponHistories = couponHistoryMapper.selectByExample(couponHistoryExample);
-        List<SmsCouponHistoryOutput> historyOutputs = smsCouponHistories.stream().map(coupon -> {
-            SmsCouponHistoryOutput smsCouponHistoryOutput = new SmsCouponHistoryOutput();
-            BeanUtils.copyProperties(coupon, smsCouponHistoryOutput);
-            return smsCouponHistoryOutput;
-        }).collect(Collectors.toList());
-        return historyOutputs;
+        return smsCouponHistories;
     }
 
     /**
@@ -107,7 +110,7 @@ public class CouponServiceImpl implements CouponService {
      * @return
      */
     @Override
-    public List<SmsCouponHistoryDetailOutput> listCart(List<CartPromotionItemOutput> cartPromotionItemList, Long memberId, Integer type) {
+    public List<SmsCouponHistoryDetail> listCart(List<CartPromotionItem> cartPromotionItemList, Long memberId, Integer type) {
         Date now = new Date();
         //获取该用户所有优惠券
         List<SmsCouponHistoryDetail> allList = couponHistoryDao.getDetailList(memberId);
@@ -158,15 +161,15 @@ public class CouponServiceImpl implements CouponService {
         }
         if (type.equals(1)) {
             return enableList.stream().map(s -> {
-                SmsCouponHistoryDetailOutput smsCouponHistoryDetailOutput = new SmsCouponHistoryDetailOutput();
-                BeanUtils.copyProperties(s, smsCouponHistoryDetailOutput);
-                return smsCouponHistoryDetailOutput;
+                SmsCouponHistoryDetail smsCouponHistoryDetail = new SmsCouponHistoryDetail();
+                BeanUtils.copyProperties(s, smsCouponHistoryDetail);
+                return smsCouponHistoryDetail;
             }).collect(Collectors.toList());
         } else {
             return disableList.stream().map(s -> {
-                SmsCouponHistoryDetailOutput smsCouponHistoryDetailOutput = new SmsCouponHistoryDetailOutput();
-                BeanUtils.copyProperties(s, smsCouponHistoryDetailOutput);
-                return smsCouponHistoryDetailOutput;
+                SmsCouponHistoryDetail smsCouponHistoryDetail = new SmsCouponHistoryDetail();
+                BeanUtils.copyProperties(s, smsCouponHistoryDetail);
+                return smsCouponHistoryDetail;
             }).collect(Collectors.toList());
         }
 
@@ -182,7 +185,9 @@ public class CouponServiceImpl implements CouponService {
      */
     @Override
     public void updateCouponStatus(Long couponId, Long memberId, Integer useStatus) {
-        if (couponId == null) return;
+        if (couponId == null) {
+            return;
+        }
         //查询第一张优惠券
         SmsCouponHistoryExample example = new SmsCouponHistoryExample();
         example.createCriteria().andMemberIdEqualTo(memberId)
@@ -194,6 +199,91 @@ public class CouponServiceImpl implements CouponService {
             couponHistory.setUseStatus(useStatus);
             couponHistoryMapper.updateByPrimaryKeySelective(couponHistory);
         }
+    }
+
+    /**
+     * 商品优惠券
+     *
+     * @param productId
+     * @param productCategoryId
+     * @return
+     */
+    @Override
+    public List<SmsCoupon> getAvailableCouponList(Long productId, Long productCategoryId) {
+        return couponHistoryDao.getAvailableCouponList(productId, productCategoryId);
+    }
+
+    /**
+     * 获取下一个场次
+     *
+     * @param date
+     * @return
+     */
+    @Override
+    public SmsFlashPromotionSession getNextFlashPromotionSession(Date date) {
+        SmsFlashPromotionSessionExample sessionExample = new SmsFlashPromotionSessionExample();
+        sessionExample.createCriteria()
+                .andStartTimeGreaterThan(date);
+        sessionExample.setOrderByClause("start_time asc");
+        List<SmsFlashPromotionSession> promotionSessionList = promotionSessionMapper.selectByExample(sessionExample);
+        if (!CollectionUtils.isEmpty(promotionSessionList)) {
+            return promotionSessionList.get(0);
+        }
+        return null;
+    }
+
+    /**
+     * 获取首页广告
+     *
+     * @return
+     */
+    @Override
+    public List<SmsHomeAdvertise> getHomeAdvertiseList() {
+        SmsHomeAdvertiseExample example = new SmsHomeAdvertiseExample();
+        example.createCriteria().andTypeEqualTo(1).andStatusEqualTo(1);
+        example.setOrderByClause("sort desc");
+        return advertiseMapper.selectByExample(example);
+    }
+
+    /**
+     * 根据时间获取秒杀活动
+     *
+     * @param date
+     * @return
+     */
+    @Override
+    public SmsFlashPromotion getFlashPromotion(Date date) {
+        Date currDate = DateUtil.getDate(date);
+        SmsFlashPromotionExample example = new SmsFlashPromotionExample();
+        example.createCriteria()
+                .andStatusEqualTo(1)
+                .andStartDateLessThanOrEqualTo(currDate)
+                .andEndDateGreaterThanOrEqualTo(currDate);
+        List<SmsFlashPromotion> flashPromotionList = flashPromotionMapper.selectByExample(example);
+        if (!CollectionUtils.isEmpty(flashPromotionList)) {
+            return flashPromotionList.get(0);
+        }
+        return null;
+    }
+
+    /**
+     * 根据时间获取秒杀场次
+     *
+     * @param date
+     * @return
+     */
+    @Override
+    public SmsFlashPromotionSession getFlashPromotionSession(Date date) {
+        Date currTime = DateUtil.getTime(date);
+        SmsFlashPromotionSessionExample sessionExample = new SmsFlashPromotionSessionExample();
+        sessionExample.createCriteria()
+                .andStartTimeLessThanOrEqualTo(currTime)
+                .andEndTimeGreaterThanOrEqualTo(currTime);
+        List<SmsFlashPromotionSession> promotionSessionList = promotionSessionMapper.selectByExample(sessionExample);
+        if (!CollectionUtils.isEmpty(promotionSessionList)) {
+            return promotionSessionList.get(0);
+        }
+        return null;
     }
 
 
@@ -218,18 +308,18 @@ public class CouponServiceImpl implements CouponService {
     }
 
 
-    private BigDecimal calcTotalAmount(List<CartPromotionItemOutput> cartItemList) {
+    private BigDecimal calcTotalAmount(List<CartPromotionItem> cartItemList) {
         BigDecimal total = new BigDecimal("0");
-        for (CartPromotionItemOutput item : cartItemList) {
+        for (CartPromotionItem item : cartItemList) {
             BigDecimal realPrice = item.getPrice().subtract(item.getReduceAmount());
             total = total.add(realPrice.multiply(new BigDecimal(item.getQuantity())));
         }
         return total;
     }
 
-    private BigDecimal calcTotalAmountByproductCategoryId(List<CartPromotionItemOutput> cartItemList, List<Long> productCategoryIds) {
+    private BigDecimal calcTotalAmountByproductCategoryId(List<CartPromotionItem> cartItemList, List<Long> productCategoryIds) {
         BigDecimal total = new BigDecimal("0");
-        for (CartPromotionItemOutput item : cartItemList) {
+        for (CartPromotionItem item : cartItemList) {
             if (productCategoryIds.contains(item.getProductCategoryId())) {
                 BigDecimal realPrice = item.getPrice().subtract(item.getReduceAmount());
                 total = total.add(realPrice.multiply(new BigDecimal(item.getQuantity())));
@@ -238,9 +328,9 @@ public class CouponServiceImpl implements CouponService {
         return total;
     }
 
-    private BigDecimal calcTotalAmountByProductId(List<CartPromotionItemOutput> cartItemList, List<Long> productIds) {
+    private BigDecimal calcTotalAmountByProductId(List<CartPromotionItem> cartItemList, List<Long> productIds) {
         BigDecimal total = new BigDecimal("0");
-        for (CartPromotionItemOutput item : cartItemList) {
+        for (CartPromotionItem item : cartItemList) {
             if (productIds.contains(item.getProductId())) {
                 BigDecimal realPrice = item.getPrice().subtract(item.getReduceAmount());
                 total = total.add(realPrice.multiply(new BigDecimal(item.getQuantity())));

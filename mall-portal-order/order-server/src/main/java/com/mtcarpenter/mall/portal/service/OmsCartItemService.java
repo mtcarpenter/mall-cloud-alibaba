@@ -1,8 +1,8 @@
 package com.mtcarpenter.mall.portal.service;
 
-import com.mtcarpenter.mall.common.CartProductOutput;
+import com.mtcarpenter.mall.domain.CartProduct;
 import com.mtcarpenter.mall.model.OmsCartItem;
-import com.mtcarpenter.mall.portal.domain.CartPromotionItem;
+import com.mtcarpenter.mall.domain.CartPromotionItem;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -41,7 +41,7 @@ public interface OmsCartItemService {
     /**
      *获取购物车中用于选择商品规格的商品信息
      */
-    CartProductOutput getCartProduct(Long productId);
+    CartProduct getCartProduct(Long productId);
 
     /**
      * 修改购物车中商品的规格
