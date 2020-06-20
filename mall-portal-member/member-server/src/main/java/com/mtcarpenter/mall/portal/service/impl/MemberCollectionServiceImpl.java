@@ -1,10 +1,14 @@
 package com.mtcarpenter.mall.portal.service.impl;
 
+import com.mtcarpenter.mall.common.UmsIntegrationConsumeSettingOutput;
+import com.mtcarpenter.mall.mapper.UmsIntegrationConsumeSettingMapper;
+import com.mtcarpenter.mall.model.UmsIntegrationConsumeSetting;
 import com.mtcarpenter.mall.model.UmsMember;
 import com.mtcarpenter.mall.portal.domain.MemberProductCollection;
 import com.mtcarpenter.mall.portal.repository.MemberProductCollectionRepository;
 import com.mtcarpenter.mall.portal.service.MemberCollectionService;
 import com.mtcarpenter.mall.portal.service.UmsMemberService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -21,6 +25,9 @@ public class MemberCollectionServiceImpl implements MemberCollectionService {
     private MemberProductCollectionRepository productCollectionRepository;
     @Autowired
     private UmsMemberService memberService;
+
+    @Autowired
+    private UmsIntegrationConsumeSettingMapper integrationConsumeSettingMapper;
 
     @Override
     public int add(MemberProductCollection productCollection) {
@@ -46,7 +53,21 @@ public class MemberCollectionServiceImpl implements MemberCollectionService {
     @Override
     public Page<MemberProductCollection> list(Integer pageNum, Integer pageSize) {
         UmsMember member = memberService.getCurrentMember();
-        Pageable pageable = PageRequest.of(pageNum-1,pageSize);
-        return productCollectionRepository.findByMemberId(member.getId(),pageable);
+        Pageable pageable = PageRequest.of(pageNum - 1, pageSize);
+        return productCollectionRepository.findByMemberId(member.getId(), pageable);
+    }
+
+    /**
+     * 获取积分规则
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    public UmsIntegrationConsumeSettingOutput integrationConsumeSetting(Long id) {
+        UmsIntegrationConsumeSetting umsIntegrationConsumeSetting = integrationConsumeSettingMapper.selectByPrimaryKey(id);
+        UmsIntegrationConsumeSettingOutput consumeSettingOutput = new UmsIntegrationConsumeSettingOutput();
+        BeanUtils.copyProperties(umsIntegrationConsumeSetting, consumeSettingOutput);
+        return consumeSettingOutput;
     }
 }

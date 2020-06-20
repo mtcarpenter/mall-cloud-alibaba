@@ -38,4 +38,15 @@ public interface ProductFeign {
     @ApiOperation("获取促销商品")
     @RequestMapping(value = "/getPromotionProductList", method = RequestMethod.POST)
     CommonResult<List<PromotionProductOutput>> getPromotionProductList(@RequestBody(required = false) List<Long> productIdList);
+
+
+    /**
+     * 锁定下单商品的所有库存
+     *
+     * @param productSkuId
+     * @param quantity
+     * @return
+     */
+    @RequestMapping(value = "/lockStock", method = RequestMethod.POST)
+    public CommonResult lockStock(@RequestParam(required = false) Long productSkuId, @RequestParam(required = false) Integer quantity);
 }

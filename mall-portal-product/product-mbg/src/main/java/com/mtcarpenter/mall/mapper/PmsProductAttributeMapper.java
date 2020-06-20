@@ -2,9 +2,7 @@ package com.mtcarpenter.mall.mapper;
 
 import com.mtcarpenter.mall.model.PmsProductAttribute;
 import com.mtcarpenter.mall.model.PmsProductAttributeExample;
-
 import java.util.List;
-
 import org.apache.ibatis.annotations.Param;
 
 public interface PmsProductAttributeMapper {

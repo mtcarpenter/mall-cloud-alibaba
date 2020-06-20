@@ -2,9 +2,7 @@ package com.mtcarpenter.mall.mapper;
 
 import com.mtcarpenter.mall.model.PmsProductFullReduction;
 import com.mtcarpenter.mall.model.PmsProductFullReductionExample;
-
 import java.util.List;
-
 import org.apache.ibatis.annotations.Param;
 
 public interface PmsProductFullReductionMapper {

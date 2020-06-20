@@ -73,9 +73,18 @@ public class PmsPortalProductController {
     @ApiOperation("获取促销商品")
     @RequestMapping(value = "/getPromotionProductList", method = RequestMethod.POST)
     @ResponseBody
-    public CommonResult<List<PromotionProductOutput>> getPromotionProductList(@RequestBody(required = false) List<Long> productIdList) {
+    public CommonResult<List<PromotionProductOutput>> getPromotionProductList(@RequestBody List<Long> productIdList) {
         List<PromotionProductOutput> promotionProductOutput = portalProductService.getPromotionProductList(productIdList);
         return CommonResult.success(promotionProductOutput);
+    }
+
+    @ApiOperation("锁定下单商品的所有库存")
+    @RequestMapping(value = "/lockStock", method = RequestMethod.POST)
+    @ResponseBody
+    public CommonResult lockStock(@RequestParam(required = false) Long productSkuId,
+                                  @RequestParam(required = false) Integer quantity) {
+        portalProductService.lockStock(productSkuId, quantity);
+        return CommonResult.success(null);
     }
 
 

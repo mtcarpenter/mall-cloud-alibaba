@@ -2,6 +2,7 @@ package com.mtcarpenter.mall.portal.dao;
 
 //import com.mtcarpenter.mall.model.CmsSubject;
 
+import com.mtcarpenter.mall.model.CmsSubject;
 import com.mtcarpenter.mall.model.PmsBrand;
 import com.mtcarpenter.mall.model.PmsProduct;
 import com.mtcarpenter.mall.portal.domain.FlashPromotionProduct;
@@ -36,8 +37,8 @@ public interface HomeDao {
     List<PmsProduct> getHotProductList(@Param("offset") Integer offset, @Param("limit") Integer limit);
 
     /**
-     * @todo
+     * @todo 待分离
      * 获取推荐专题
      */
-    // List<CmsSubject> getRecommendSubjectList(@Param("offset") Integer offset, @Param("limit") Integer limit);
+    List<CmsSubject> getRecommendSubjectList(@Param("offset") Integer offset, @Param("limit") Integer limit);
 }

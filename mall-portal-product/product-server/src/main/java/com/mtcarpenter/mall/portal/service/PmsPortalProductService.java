@@ -44,4 +44,14 @@ public interface PmsPortalProductService {
      * @return
      */
     List<PromotionProductOutput> getPromotionProductList(List<Long> productIdList);
+
+
+    /**
+     * 锁定下单商品的所有库存
+     *
+     * @param productSkuId
+     * @param quantity
+     * @return
+     */
+    void lockStock(Long productSkuId, Integer quantity);
 }

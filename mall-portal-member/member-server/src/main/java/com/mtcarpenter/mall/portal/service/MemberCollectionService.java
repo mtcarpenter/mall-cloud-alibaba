@@ -1,5 +1,6 @@
 package com.mtcarpenter.mall.portal.service;
 
+import com.mtcarpenter.mall.common.UmsIntegrationConsumeSettingOutput;
 import com.mtcarpenter.mall.portal.domain.MemberProductCollection;
 import org.springframework.data.domain.Page;
 
@@ -13,4 +14,12 @@ public interface MemberCollectionService {
     int delete(Long productId);
 
     Page<MemberProductCollection> list(Integer pageNum, Integer pageSize);
+
+    /**
+     * 获取积分规则
+     *
+     * @param id
+     * @return
+     */
+    UmsIntegrationConsumeSettingOutput integrationConsumeSetting(Long id);
 }

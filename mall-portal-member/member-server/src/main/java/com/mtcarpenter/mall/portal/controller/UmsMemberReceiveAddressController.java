@@ -6,6 +6,7 @@ import com.mtcarpenter.mall.model.UmsMemberReceiveAddress;
 import com.mtcarpenter.mall.portal.service.UmsMemberReceiveAddressService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -67,8 +68,10 @@ public class UmsMemberReceiveAddressController {
     @ApiOperation("获取收货地址详情")
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ResponseBody
-    public CommonResult<UmsMemberReceiveAddress> getItem(@PathVariable Long id) {
+    public CommonResult<UmsMemberReceiveAddressOutput> getItem(@PathVariable Long id) {
         UmsMemberReceiveAddress address = memberReceiveAddressService.getItem(id);
-        return CommonResult.success(address);
+        UmsMemberReceiveAddressOutput umsMemberReceiveAddressOutput = new UmsMemberReceiveAddressOutput();
+        BeanUtils.copyProperties(address, umsMemberReceiveAddressOutput);
+        return CommonResult.success(umsMemberReceiveAddressOutput);
     }
 }

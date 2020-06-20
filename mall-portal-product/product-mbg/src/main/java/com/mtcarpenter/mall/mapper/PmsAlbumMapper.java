@@ -2,9 +2,7 @@ package com.mtcarpenter.mall.mapper;
 
 import com.mtcarpenter.mall.model.PmsAlbum;
 import com.mtcarpenter.mall.model.PmsAlbumExample;
-
 import java.util.List;
-
 import org.apache.ibatis.annotations.Param;
 
 public interface PmsAlbumMapper {

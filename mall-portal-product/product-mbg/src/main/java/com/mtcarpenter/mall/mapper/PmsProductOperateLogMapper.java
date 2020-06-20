@@ -2,9 +2,7 @@ package com.mtcarpenter.mall.mapper;
 
 import com.mtcarpenter.mall.model.PmsProductOperateLog;
 import com.mtcarpenter.mall.model.PmsProductOperateLogExample;
-
 import java.util.List;
-
 import org.apache.ibatis.annotations.Param;
 
 public interface PmsProductOperateLogMapper {

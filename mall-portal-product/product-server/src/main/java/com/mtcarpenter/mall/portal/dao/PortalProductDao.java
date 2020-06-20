@@ -17,6 +17,7 @@ public interface PortalProductDao {
     CartProduct getCartProduct(@Param("id") Long id);
 
     List<PromotionProductOutput> getPromotionProductList(@Param("ids") List<Long> ids);
+
     // @todo
-//    List<SmsCoupon> getAvailableCouponList(@Param("productId") Long productId,@Param("productCategoryId")Long productCategoryId);
+    List<SmsCoupon> getAvailableCouponList(@Param("productId") Long productId, @Param("productCategoryId") Long productCategoryId);
 }

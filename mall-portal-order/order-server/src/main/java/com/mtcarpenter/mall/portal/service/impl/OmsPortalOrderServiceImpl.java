@@ -4,24 +4,33 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import com.github.pagehelper.PageHelper;
 import com.mtcarpenter.mall.client.CouponFeign;
+import com.mtcarpenter.mall.client.MemberFeign;
+import com.mtcarpenter.mall.client.ProductFeign;
 import com.mtcarpenter.mall.common.*;
 import com.mtcarpenter.mall.common.api.CommonPage;
+import com.mtcarpenter.mall.common.api.ResultCode;
+import com.mtcarpenter.mall.common.exception.ApiException;
 import com.mtcarpenter.mall.common.exception.Asserts;
 import com.mtcarpenter.mall.mapper.*;
 import com.mtcarpenter.mall.model.*;
 import com.mtcarpenter.mall.portal.component.CancelOrderSender;
 import com.mtcarpenter.mall.portal.dao.PortalOrderDao;
 import com.mtcarpenter.mall.portal.dao.PortalOrderItemDao;
-import com.mtcarpenter.mall.portal.dao.SmsCouponHistoryDao;
 import com.mtcarpenter.mall.portal.domain.*;
 import com.mtcarpenter.mall.portal.service.*;
+import com.mtcarpenter.mall.portal.util.JwtTokenUtil;
+import com.mtcarpenter.mall.portal.util.MemberUtil;
 import com.mtcarpenter.mall.security.service.RedisService;
+import io.micrometer.core.instrument.util.StringUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
@@ -33,27 +42,15 @@ import java.util.stream.Collectors;
  * Created by macro on 2018/8/30.
  */
 @Service
+@Slf4j
 public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
-    @Autowired
-    private UmsMemberService memberService;
+
     @Autowired
     private OmsCartItemService cartItemService;
-    @Autowired
-    private UmsMemberReceiveAddressService memberReceiveAddressService;
-    @Autowired
-    private UmsMemberCouponService memberCouponService;
-    @Autowired
-    private UmsIntegrationConsumeSettingMapper integrationConsumeSettingMapper;
-    @Autowired
-    private PmsSkuStockMapper skuStockMapper;
-    @Autowired
-    private SmsCouponHistoryDao couponHistoryDao;
     @Autowired
     private OmsOrderMapper orderMapper;
     @Autowired
     private PortalOrderItemDao orderItemDao;
-    @Autowired
-    private SmsCouponHistoryMapper couponHistoryMapper;
     @Autowired
     private RedisService redisService;
     @Value("${redis.key.orderId}")
@@ -72,23 +69,49 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
     @Autowired
     private CouponFeign couponFeign;
 
+    @Autowired
+    private ProductFeign productFeign;
+
+    @Autowired
+    private HttpServletRequest request;
+    @Value("${jwt.tokenHeader}")
+    private String tokenHeader;
+    @Value("${redis.member}")
+    private String member;
+
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
+    @Autowired
+    private RedisTemplate redisTemplate;
+
+    @Autowired
+    private MemberFeign memberFeign;
+
+    @Autowired
+    private MemberUtil memberUtil;
+
     @Override
     public ConfirmOrderResult generateConfirmOrder(List<Long> cartIds) {
         ConfirmOrderResult result = new ConfirmOrderResult();
-        //获取购物车信息
-        UmsMember currentMember = memberService.getCurrentMember();
-        List<CartPromotionItem> cartPromotionItemList = cartItemService.listPromotion(currentMember.getId(),cartIds);
+        //获取购物车信息 redis 中获取
+        UmsMemberOutput currentMember = memberUtil.getRedisUmsMember(request);
+        List<CartPromotionItem> cartPromotionItemList = cartItemService.listPromotion(currentMember.getId(), cartIds);
         result.setCartPromotionItemList(cartPromotionItemList);
         //获取用户收货地址列表
-        List<UmsMemberReceiveAddress> memberReceiveAddressList = memberReceiveAddressService.list();
+        List<UmsMemberReceiveAddressOutput> memberReceiveAddressList = memberFeign.list(currentMember.getId()).getData();
         result.setMemberReceiveAddressList(memberReceiveAddressList);
         //获取用户可用优惠券列表
-        List<SmsCouponHistoryDetail> couponHistoryDetailList = memberCouponService.listCart(cartPromotionItemList, 1);
+        List<CartPromotionItemOutput> cartPromotionItemOutputs = cartPromotionItemList.stream().map(c -> {
+            CartPromotionItemOutput cartPromotionItemOutput = new CartPromotionItemOutput();
+            BeanUtils.copyProperties(c, cartPromotionItemOutput);
+            return cartPromotionItemOutput;
+        }).collect(Collectors.toList());
+        List<SmsCouponHistoryDetailOutput> couponHistoryDetailList = couponFeign.listCartPromotion(1, cartPromotionItemOutputs, currentMember.getId()).getData();
         result.setCouponHistoryDetailList(couponHistoryDetailList);
         //获取用户积分
         result.setMemberIntegration(currentMember.getIntegration());
         //获取积分使用规则
-        UmsIntegrationConsumeSetting integrationConsumeSetting = integrationConsumeSettingMapper.selectByPrimaryKey(1L);
+        UmsIntegrationConsumeSettingOutput integrationConsumeSetting = memberFeign.integrationConsumeSetting(1L).getData();
         result.setIntegrationConsumeSetting(integrationConsumeSetting);
         //计算总金额、活动优惠、应付金额
         ConfirmOrderResult.CalcAmount calcAmount = calcCartAmount(cartPromotionItemList);
@@ -99,11 +122,9 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
     @Override
     public Map<String, Object> generateOrder(OrderParam orderParam) {
         List<OmsOrderItem> orderItemList = new ArrayList<>();
-        //获取购物车及优惠信息
-//        UmsMember currentMember = memberService.getCurrentMember();
-        Long id = 1L;
-        // @todo memberId
-        List<CartPromotionItem> cartPromotionItemList = cartItemService.listPromotion(id, orderParam.getCartIds());
+        //获取购物车及优惠信息  redis
+        UmsMemberOutput currentMember = memberUtil.getRedisUmsMember(request);
+        List<CartPromotionItem> cartPromotionItemList = cartItemService.listPromotion(currentMember.getId(), orderParam.getCartIds());
         for (CartPromotionItem cartPromotionItem : cartPromotionItemList) {
             //生成下单商品信息
             OmsOrderItem orderItem = new OmsOrderItem();
@@ -144,7 +165,7 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
             handleCouponAmount(orderItemList, couponHistoryDetail);
         }
         //判断是否使用积分
-        if (orderParam.getUseIntegration() == null||orderParam.getUseIntegration().equals(0)) {
+        if (orderParam.getUseIntegration() == null || orderParam.getUseIntegration().equals(0)) {
             //不使用积分
             for (OmsOrderItem orderItem : orderItemList) {
                 orderItem.setIntegrationAmount(new BigDecimal(0));
@@ -201,7 +222,7 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
         //订单类型：0->正常订单；1->秒杀订单
         order.setOrderType(0);
         //收货人信息：姓名、电话、邮编、地址
-        UmsMemberReceiveAddress address = memberReceiveAddressService.getItem(orderParam.getMemberReceiveAddressId());
+        UmsMemberReceiveAddressOutput address = memberFeign.getItem(orderParam.getMemberReceiveAddressId()).getData();
         order.setReceiverName(address.getName());
         order.setReceiverPhone(address.getPhoneNumber());
         order.setReceiverPostCode(address.getPostCode());
@@ -220,7 +241,7 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
         order.setOrderSn(generateOrderSn(order));
         //设置自动收货天数
         List<OmsOrderSetting> orderSettings = orderSettingMapper.selectByExample(new OmsOrderSettingExample());
-        if(CollUtil.isNotEmpty(orderSettings)){
+        if (CollUtil.isNotEmpty(orderSettings)) {
             order.setAutoConfirmDay(orderSettings.get(0).getConfirmOvertime());
         }
         // TODO: 2018/9/3 bill_*,delivery_*
@@ -238,7 +259,7 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
         //如使用积分需要扣除积分
         if (orderParam.getUseIntegration() != null) {
             order.setUseIntegration(orderParam.getUseIntegration());
-            memberService.updateIntegration(currentMember.getId(), currentMember.getIntegration() - orderParam.getUseIntegration());
+            memberFeign.updateIntegration(currentMember.getId(), -orderParam.getUseIntegration());
         }
         //删除购物车中的下单商品
         deleteCartItemList(cartPromotionItemList, currentMember);
@@ -249,6 +270,7 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
         result.put("orderItemList", orderItemList);
         return result;
     }
+
 
     @Override
     public Integer paySuccess(Long orderId, Integer payType) {
@@ -267,7 +289,7 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
 
     @Override
     public Integer cancelTimeOutOrder() {
-        Integer count=0;
+        Integer count = 0;
         OmsOrderSetting orderSetting = orderSettingMapper.selectByPrimaryKey(1L);
         //查询超时、未支付的订单及订单详情
         List<OmsOrderDetail> timeOutOrders = portalOrderDao.getTimeOutOrders(orderSetting.getNormalOrderOvertime());
@@ -287,8 +309,7 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
             couponFeign.updateCouponStatus(timeOutOrder.getCouponId(), timeOutOrder.getMemberId(), 0);
             //返还使用积分
             if (timeOutOrder.getUseIntegration() != null) {
-                UmsMember member = memberService.getById(timeOutOrder.getMemberId());
-                memberService.updateIntegration(timeOutOrder.getMemberId(), member.getIntegration() + timeOutOrder.getUseIntegration());
+                memberFeign.updateIntegration(timeOutOrder.getMemberId(), timeOutOrder.getUseIntegration());
             }
         }
         return timeOutOrders.size();
@@ -319,8 +340,7 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
             couponFeign.updateCouponStatus(cancelOrder.getCouponId(), cancelOrder.getMemberId(), 0);
             //返还使用积分
             if (cancelOrder.getUseIntegration() != null) {
-                UmsMember member = memberService.getById(cancelOrder.getMemberId());
-                memberService.updateIntegration(cancelOrder.getMemberId(), member.getIntegration() + cancelOrder.getUseIntegration());
+                memberFeign.updateIntegration(cancelOrder.getMemberId(), cancelOrder.getUseIntegration());
             }
         }
     }
@@ -336,12 +356,13 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
 
     @Override
     public void confirmReceiveOrder(Long orderId) {
-        UmsMember member = memberService.getCurrentMember();
+        // redis 用户信息
+        UmsMemberOutput member = memberUtil.getRedisUmsMember(request);
         OmsOrder order = orderMapper.selectByPrimaryKey(orderId);
-        if(!member.getId().equals(order.getMemberId())){
+        if (!member.getId().equals(order.getMemberId())) {
             Asserts.fail("不能确认他人订单！");
         }
-        if(order.getStatus()!=2){
+        if (order.getStatus() != 2) {
             Asserts.fail("该订单还未发货！");
         }
         order.setStatus(3);
@@ -352,16 +373,17 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
 
     @Override
     public CommonPage<OmsOrderDetail> list(Integer status, Integer pageNum, Integer pageSize) {
-        if(status==-1){
+        if (status == -1) {
             status = null;
         }
-        UmsMember member = memberService.getCurrentMember();
-        PageHelper.startPage(pageNum,pageSize);
+        // redis 中用户信息
+        UmsMemberOutput member = memberUtil.getRedisUmsMember(request);
+        PageHelper.startPage(pageNum, pageSize);
         OmsOrderExample orderExample = new OmsOrderExample();
         OmsOrderExample.Criteria criteria = orderExample.createCriteria();
         criteria.andDeleteStatusEqualTo(0)
                 .andMemberIdEqualTo(member.getId());
-        if(status!=null){
+        if (status != null) {
             criteria.andStatusEqualTo(status);
         }
         orderExample.setOrderByClause("create_time desc");
@@ -373,7 +395,7 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
         resultPage.setPageSize(orderPage.getPageSize());
         resultPage.setTotal(orderPage.getTotal());
         resultPage.setTotalPage(orderPage.getTotalPage());
-        if(CollUtil.isEmpty(orderList)){
+        if (CollUtil.isEmpty(orderList)) {
             return resultPage;
         }
         //设置数据信息
@@ -384,7 +406,7 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
         List<OmsOrderDetail> orderDetailList = new ArrayList<>();
         for (OmsOrder omsOrder : orderList) {
             OmsOrderDetail orderDetail = new OmsOrderDetail();
-            BeanUtil.copyProperties(omsOrder,orderDetail);
+            BeanUtil.copyProperties(omsOrder, orderDetail);
             List<OmsOrderItem> relatedItemList = orderItemList.stream().filter(item -> item.getOrderId().equals(orderDetail.getId())).collect(Collectors.toList());
             orderDetail.setOrderItemList(relatedItemList);
             orderDetailList.add(orderDetail);
@@ -400,22 +422,23 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
         example.createCriteria().andOrderIdEqualTo(orderId);
         List<OmsOrderItem> orderItemList = orderItemMapper.selectByExample(example);
         OmsOrderDetail orderDetail = new OmsOrderDetail();
-        BeanUtil.copyProperties(omsOrder,orderDetail);
+        BeanUtil.copyProperties(omsOrder, orderDetail);
         orderDetail.setOrderItemList(orderItemList);
         return orderDetail;
     }
 
     @Override
     public void deleteOrder(Long orderId) {
-        UmsMember member = memberService.getCurrentMember();
+        // redis 用户信息
+        UmsMemberOutput member = memberUtil.getRedisUmsMember(request);
         OmsOrder order = orderMapper.selectByPrimaryKey(orderId);
-        if(!member.getId().equals(order.getMemberId())){
+        if (!member.getId().equals(order.getMemberId())) {
             Asserts.fail("不能删除他人订单！");
         }
-        if(order.getStatus()==3||order.getStatus()==4){
+        if (order.getStatus() == 3 || order.getStatus() == 4) {
             order.setDeleteStatus(1);
             orderMapper.updateByPrimaryKey(order);
-        }else{
+        } else {
             Asserts.fail("只能删除已完成或已关闭的订单！");
         }
     }
@@ -426,7 +449,7 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
     private String generateOrderSn(OmsOrder order) {
         StringBuilder sb = new StringBuilder();
         String date = new SimpleDateFormat("yyyyMMdd").format(new Date());
-        String key = REDIS_DATABASE+":"+ REDIS_KEY_ORDER_ID + date;
+        String key = REDIS_DATABASE + ":" + REDIS_KEY_ORDER_ID + date;
         Long increment = redisService.incr(key, 1);
         sb.append(date);
         sb.append(String.format("%02d", order.getSourceType()));
@@ -443,7 +466,7 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
     /**
      * 删除下单商品的购物车信息
      */
-    private void deleteCartItemList(List<CartPromotionItem> cartPromotionItemList, UmsMember currentMember) {
+    private void deleteCartItemList(List<CartPromotionItem> cartPromotionItemList, UmsMemberOutput currentMember) {
         List<Long> ids = new ArrayList<>();
         for (CartPromotionItem cartPromotionItem : cartPromotionItemList) {
             ids.add(cartPromotionItem.getId());
@@ -472,7 +495,6 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
         }
         return sum;
     }
-
 
 
     private void handleRealAmount(List<OmsOrderItem> orderItemList) {
@@ -562,7 +584,7 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
      * @param currentMember  使用的用户
      * @param hasCoupon      是否已经使用优惠券
      */
-    private BigDecimal getUseIntegrationAmount(Integer useIntegration, BigDecimal totalAmount, UmsMember currentMember, boolean hasCoupon) {
+    private BigDecimal getUseIntegrationAmount(Integer useIntegration, BigDecimal totalAmount, UmsMemberOutput currentMember, boolean hasCoupon) {
         BigDecimal zeroAmount = new BigDecimal(0);
         //判断用户是否有这么多积分
         if (useIntegration.compareTo(currentMember.getIntegration()) > 0) {
@@ -570,7 +592,7 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
         }
         //根据积分使用规则判断是否可用
         //是否可与优惠券共用
-        UmsIntegrationConsumeSetting integrationConsumeSetting = integrationConsumeSettingMapper.selectByPrimaryKey(1L);
+        UmsIntegrationConsumeSettingOutput integrationConsumeSetting = memberFeign.integrationConsumeSetting(1L).getData();
         if (hasCoupon && integrationConsumeSetting.getCouponStatus().equals(0)) {
             //不可与优惠券共用
             return zeroAmount;
@@ -668,13 +690,12 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
      * @param couponId              使用优惠券id
      */
     private SmsCouponHistoryDetailOutput getUseCoupon(List<CartPromotionItem> cartPromotionItemList, Long couponId) {
-        // @todo memberId
         List<CartPromotionItemOutput> promotionItems = cartPromotionItemList.stream().map(m -> {
             CartPromotionItemOutput cartPromotionItem = new CartPromotionItemOutput();
             BeanUtils.copyProperties(m, cartPromotionItem);
             return cartPromotionItem;
         }).collect(Collectors.toList());
-        List<SmsCouponHistoryDetailOutput> couponHistoryDetailList = couponFeign.listCartPromotion(1,promotionItems, 1L).getData();
+        List<SmsCouponHistoryDetailOutput> couponHistoryDetailList = couponFeign.listCartPromotion(1, promotionItems, memberUtil.getRedisUmsMember(request).getId()).getData();
         for (SmsCouponHistoryDetailOutput couponHistoryDetail : couponHistoryDetailList) {
             if (couponHistoryDetail.getCoupon().getId().equals(couponId)) {
                 return couponHistoryDetail;
@@ -699,9 +720,7 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
      */
     private void lockStock(List<CartPromotionItem> cartPromotionItemList) {
         for (CartPromotionItem cartPromotionItem : cartPromotionItemList) {
-            PmsSkuStock skuStock = skuStockMapper.selectByPrimaryKey(cartPromotionItem.getProductSkuId());
-            skuStock.setLockStock(skuStock.getLockStock() + cartPromotionItem.getQuantity());
-            skuStockMapper.updateByPrimaryKeySelective(skuStock);
+            productFeign.lockStock(cartPromotionItem.getProductSkuId(), cartPromotionItem.getQuantity());
         }
     }
 
@@ -710,7 +729,7 @@ public class OmsPortalOrderServiceImpl implements OmsPortalOrderService {
      */
     private boolean hasStock(List<CartPromotionItem> cartPromotionItemList) {
         for (CartPromotionItem cartPromotionItem : cartPromotionItemList) {
-            if (cartPromotionItem.getRealStock()==null||cartPromotionItem.getRealStock() <= 0) {
+            if (cartPromotionItem.getRealStock() == null || cartPromotionItem.getRealStock() <= 0) {
                 return false;
             }
         }

@@ -41,7 +41,7 @@ public class UmsMemberController {
                                  @RequestParam String telephone,
                                  @RequestParam String authCode) {
         memberService.register(username, password, telephone, authCode);
-        return CommonResult.success(null,"注册成功");
+        return CommonResult.success(null, "注册成功");
     }
 
     @ApiOperation("会员登录")
@@ -63,7 +63,7 @@ public class UmsMemberController {
     @RequestMapping(value = "/info", method = RequestMethod.GET)
     @ResponseBody
     public CommonResult info(Principal principal) {
-        if(principal==null){
+        if (principal == null) {
             return CommonResult.unauthorized(null);
         }
         UmsMember member = memberService.getCurrentMember();
@@ -75,17 +75,17 @@ public class UmsMemberController {
     @ResponseBody
     public CommonResult getAuthCode(@RequestParam String telephone) {
         String authCode = memberService.generateAuthCode(telephone);
-        return CommonResult.success(authCode,"获取验证码成功");
+        return CommonResult.success(authCode, "获取验证码成功");
     }
 
     @ApiOperation("修改密码")
     @RequestMapping(value = "/updatePassword", method = RequestMethod.POST)
     @ResponseBody
     public CommonResult updatePassword(@RequestParam String telephone,
-                                 @RequestParam String password,
-                                 @RequestParam String authCode) {
-        memberService.updatePassword(telephone,password,authCode);
-        return CommonResult.success(null,"密码修改成功");
+                                       @RequestParam String password,
+                                       @RequestParam String authCode) {
+        memberService.updatePassword(telephone, password, authCode);
+        return CommonResult.success(null, "密码修改成功");
     }
 
 
@@ -103,4 +103,16 @@ public class UmsMemberController {
         tokenMap.put("tokenHead", tokenHead);
         return CommonResult.success(tokenMap);
     }
+
+    @ApiOperation(value = "根据会员id修改会员积分")
+    @RequestMapping(value = "/updateIntegration", method = RequestMethod.GET)
+    @ResponseBody
+    public CommonResult updateIntegration(@RequestParam("id") Long id,
+                                          @RequestParam("integration") Integer integration) {
+        UmsMember member = memberService.getById(id);
+        memberService.updateIntegration(id, member.getIntegration() + integration);
+        return CommonResult.success(null);
+    }
+
+
 }

@@ -1,5 +1,6 @@
 package com.mtcarpenter.mall.portal.controller;
 
+import com.mtcarpenter.mall.client.OrderFeign;
 import com.mtcarpenter.mall.common.CartPromotionItemOutput;
 import com.mtcarpenter.mall.common.SmsCouponHistoryDetailOutput;
 import com.mtcarpenter.mall.common.SmsCouponHistoryOutput;
@@ -11,7 +12,6 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,6 +25,9 @@ public class CouponController {
 
     @Autowired
     private CouponService couponService;
+
+    @Autowired
+    private OrderFeign orderFeign;
 
     @ApiOperation("领取指定优惠券")
     @RequestMapping(value = "/add/{couponId}", method = RequestMethod.POST)
@@ -51,8 +54,7 @@ public class CouponController {
     @RequestMapping(value = "/list/cart/{type}", method = RequestMethod.GET)
     public CommonResult<List<SmsCouponHistoryDetailOutput>> listCart(@PathVariable Integer type,
                                                                      @RequestParam(value = "memberId", required = false) Long memberId) {
-        List<CartPromotionItemOutput> cartPromotionItemList = new ArrayList<>();
-        //@todo  cartItemService.listPromotion(memberService.getCurrentMember().getId(), null);
+        List<CartPromotionItemOutput> cartPromotionItemList = orderFeign.listPromotion(null).getData();
         List<SmsCouponHistoryDetailOutput> couponHistoryList = couponService.listCart(cartPromotionItemList, memberId, type);
         return CommonResult.success(couponHistoryList);
     }
@@ -63,8 +65,7 @@ public class CouponController {
     @RequestMapping(value = "/list/cart/{type}", method = RequestMethod.POST)
     public CommonResult<List<SmsCouponHistoryDetailOutput>> listCartPromotion(@PathVariable Integer type,
                                                                               List<CartPromotionItemOutput> cartPromotionItemList,
-                                                                              @RequestParam(value = "memberId", required = false) Long memberId
-    ) {
+                                                                              @RequestParam(value = "memberId", required = false) Long memberId) {
         List<SmsCouponHistoryDetailOutput> couponHistoryList = couponService.listCart(cartPromotionItemList, memberId, type);
         return CommonResult.success(couponHistoryList);
     }

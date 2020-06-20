@@ -30,14 +30,19 @@
             <property name="nullCatalogMeansCurrent" value="true" />
         </jdbcConnection>
 
-        <javaModelGenerator targetPackage="com.mtcarpenter.mall.model" targetProject="mall-portal-product\product-mbg\src\main\java"/>
+        <javaModelGenerator targetPackage="com.mtcarpenter.mall.model"
+                            targetProject="mall-portal-product\product-mbg\src\main\java"/>
 
-        <sqlMapGenerator targetPackage="com.mtcarpenter.mall.mapper" targetProject="mall-portal-product\product-mbg\src\main\resources"/>
+        <sqlMapGenerator targetPackage="com.mtcarpenter.mall.mapper"
+                         targetProject="mall-portal-product\product-mbg\src\main\resources"/>
 
         <javaClientGenerator type="XMLMAPPER" targetPackage="com.mtcarpenter.mall.mapper"
                              targetProject="mall-portal-product\product-mbg\src\main\java"/>
         <!--生成全部表tableName设为%-->
         <table tableName="pms%">
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+        <table tableName="cms_subject">
             <generatedKey column="id" sqlStatement="MySql" identity="true"/>
         </table>
     </context>

@@ -1,19 +1,23 @@
 package com.mtcarpenter.mall.portal.controller;
 
-import com.mtcarpenter.mall.client.ProductFeign;
 import com.mtcarpenter.mall.common.CartProductOutput;
+import com.mtcarpenter.mall.common.CartPromotionItemOutput;
+import com.mtcarpenter.mall.common.UmsMemberOutput;
 import com.mtcarpenter.mall.common.api.CommonResult;
 import com.mtcarpenter.mall.model.OmsCartItem;
 import com.mtcarpenter.mall.portal.domain.CartPromotionItem;
 import com.mtcarpenter.mall.portal.service.OmsCartItemService;
+import com.mtcarpenter.mall.portal.util.MemberUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 购物车管理Controller
@@ -25,12 +29,12 @@ import java.util.List;
 public class OmsCartItemController {
     @Autowired
     private OmsCartItemService cartItemService;
-    // @Todo
-//    @Autowired
-//    private UmsMemberService memberService;
 
     @Autowired
-    private ProductFeign productFeign;
+    private HttpServletRequest request;
+
+    @Autowired
+    private MemberUtil memberUtil;
 
     @ApiOperation("添加商品到购物车")
     @RequestMapping(value = "/add", method = RequestMethod.POST)
@@ -47,18 +51,23 @@ public class OmsCartItemController {
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
     public CommonResult<List<OmsCartItem>> list() {
-        List<OmsCartItem> cartItemList = new ArrayList<>();
-///  @todo      List<OmsCartItem> cartItemList = cartItemService.list(memberService.getCurrentMember().getId());
+        UmsMemberOutput umsMember = memberUtil.getRedisUmsMember(request);
+        List<OmsCartItem> cartItemList = cartItemService.list(umsMember.getId());
         return CommonResult.success(cartItemList);
     }
 
     @ApiOperation("获取某个会员的购物车列表,包括促销信息")
     @RequestMapping(value = "/list/promotion", method = RequestMethod.GET)
     @ResponseBody
-    public CommonResult<List<CartPromotionItem>> listPromotion(@RequestParam(required = false) List<Long> cartIds) {
-        List<CartPromotionItem> cartPromotionItemList = new ArrayList<>();
-        //@todo List<CartPromotionItem> cartPromotionItemList = cartItemService.listPromotion(memberService.getCurrentMember().getId(), cartIds);
-        return CommonResult.success(cartPromotionItemList);
+    public CommonResult<List<CartPromotionItemOutput>> listPromotion(@RequestParam(required = false) List<Long> cartIds) {
+        UmsMemberOutput umsMember = memberUtil.getRedisUmsMember(request);
+        List<CartPromotionItem> cartPromotionItemList = cartItemService.listPromotion(umsMember.getId(), cartIds);
+        List<CartPromotionItemOutput> cartPromotionItemOutputs = cartPromotionItemList.stream().map(c -> {
+            CartPromotionItemOutput cartPromotionItemOutput = new CartPromotionItemOutput();
+            BeanUtils.copyProperties(c, cartPromotionItemOutput);
+            return cartPromotionItemOutput;
+        }).collect(Collectors.toList());
+        return CommonResult.success(cartPromotionItemOutputs);
     }
 
     @ApiOperation("修改购物车中某个商品的数量")
@@ -66,8 +75,8 @@ public class OmsCartItemController {
     @ResponseBody
     public CommonResult updateQuantity(@RequestParam Long id,
                                        @RequestParam Integer quantity) {
-        int count = 0;
-      // @todo int count = cartItemService.updateQuantity(id, memberService.getCurrentMember().getId(), quantity);
+        UmsMemberOutput umsMember = memberUtil.getRedisUmsMember(request);
+        int count = cartItemService.updateQuantity(id, umsMember.getId(), quantity);
         if (count > 0) {
             return CommonResult.success(count);
         }
@@ -97,8 +106,8 @@ public class OmsCartItemController {
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @ResponseBody
     public CommonResult delete(@RequestParam("ids") List<Long> ids) {
-        int count = 0;
-       //@todo int count = cartItemService.delete(memberService.getCurrentMember().getId(), ids);
+        UmsMemberOutput umsMember = memberUtil.getRedisUmsMember(request);
+        int count = cartItemService.delete(umsMember.getId(), ids);
         if (count > 0) {
             return CommonResult.success(count);
         }
@@ -109,8 +118,8 @@ public class OmsCartItemController {
     @RequestMapping(value = "/clear", method = RequestMethod.POST)
     @ResponseBody
     public CommonResult clear() {
-        int count = 0;
-        //@todo int count = cartItemService.clear(memberService.getCurrentMember().getId());
+        UmsMemberOutput umsMember = memberUtil.getRedisUmsMember(request);
+        int count = cartItemService.clear(umsMember.getId());
         if (count > 0) {
             return CommonResult.success(count);
         }

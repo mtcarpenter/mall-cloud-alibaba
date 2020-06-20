@@ -1,5 +1,6 @@
 package com.mtcarpenter.mall.portal.domain;
 
+import com.mtcarpenter.mall.common.SmsCouponOutput;
 import com.mtcarpenter.mall.model.*;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -28,7 +29,6 @@ public class PmsPortalProductDetail {
     private List<PmsProductLadder> productLadderList;
     @ApiModelProperty("商品满减价格设置")
     private List<PmsProductFullReduction> productFullReductionList;
-    // @todo
-//    @ApiModelProperty("商品可用优惠券")
-//    private List<SmsCoupon> couponList;
+    @ApiModelProperty("商品可用优惠券")
+    private List<SmsCouponOutput> couponList;
 }

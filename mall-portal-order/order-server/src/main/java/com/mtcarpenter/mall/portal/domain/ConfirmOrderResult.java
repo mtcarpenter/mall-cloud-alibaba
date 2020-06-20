@@ -1,7 +1,8 @@
 package com.mtcarpenter.mall.portal.domain;
 
-import com.mtcarpenter.mall.model.UmsIntegrationConsumeSetting;
-import com.mtcarpenter.mall.model.UmsMemberReceiveAddress;
+import com.mtcarpenter.mall.common.SmsCouponHistoryDetailOutput;
+import com.mtcarpenter.mall.common.UmsIntegrationConsumeSettingOutput;
+import com.mtcarpenter.mall.common.UmsMemberReceiveAddressOutput;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -14,11 +15,11 @@ public class ConfirmOrderResult {
     //包含优惠信息的购物车信息
     private List<CartPromotionItem> cartPromotionItemList;
     //用户收货地址列表
-    private List<UmsMemberReceiveAddress> memberReceiveAddressList;
+    private List<UmsMemberReceiveAddressOutput> memberReceiveAddressList;
     //用户可用优惠券列表
-    private List<SmsCouponHistoryDetail> couponHistoryDetailList;
+    private List<SmsCouponHistoryDetailOutput> couponHistoryDetailList;
     //积分使用规则
-    private UmsIntegrationConsumeSetting integrationConsumeSetting;
+    private UmsIntegrationConsumeSettingOutput integrationConsumeSetting;
     //会员持有的积分
     private Integer memberIntegration;
     //计算的金额
@@ -32,27 +33,27 @@ public class ConfirmOrderResult {
         this.cartPromotionItemList = cartPromotionItemList;
     }
 
-    public List<UmsMemberReceiveAddress> getMemberReceiveAddressList() {
+    public List<UmsMemberReceiveAddressOutput> getMemberReceiveAddressList() {
         return memberReceiveAddressList;
     }
 
-    public void setMemberReceiveAddressList(List<UmsMemberReceiveAddress> memberReceiveAddressList) {
+    public void setMemberReceiveAddressList(List<UmsMemberReceiveAddressOutput> memberReceiveAddressList) {
         this.memberReceiveAddressList = memberReceiveAddressList;
     }
 
-    public List<SmsCouponHistoryDetail> getCouponHistoryDetailList() {
+    public List<SmsCouponHistoryDetailOutput> getCouponHistoryDetailList() {
         return couponHistoryDetailList;
     }
 
-    public void setCouponHistoryDetailList(List<SmsCouponHistoryDetail> couponHistoryDetailList) {
+    public void setCouponHistoryDetailList(List<SmsCouponHistoryDetailOutput> couponHistoryDetailList) {
         this.couponHistoryDetailList = couponHistoryDetailList;
     }
 
-    public UmsIntegrationConsumeSetting getIntegrationConsumeSetting() {
+    public UmsIntegrationConsumeSettingOutput getIntegrationConsumeSetting() {
         return integrationConsumeSetting;
     }
 
-    public void setIntegrationConsumeSetting(UmsIntegrationConsumeSetting integrationConsumeSetting) {
+    public void setIntegrationConsumeSetting(UmsIntegrationConsumeSettingOutput integrationConsumeSetting) {
         this.integrationConsumeSetting = integrationConsumeSetting;
     }
 

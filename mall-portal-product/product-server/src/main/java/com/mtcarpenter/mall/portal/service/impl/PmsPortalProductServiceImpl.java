@@ -127,7 +127,7 @@ public class PmsPortalProductServiceImpl implements PmsPortalProductService {
             result.setProductFullReductionList(productFullReductionList);
         }
         //商品可用优惠券 @todo
-        // result.setCouponList(portalProductDao.getAvailableCouponList(product.getId(),product.getProductCategoryId()));
+         result.setCouponList(portalProductDao.getAvailableCouponList(product.getId(), product.getProductCategoryId()));
         return result;
     }
 
@@ -155,6 +155,21 @@ public class PmsPortalProductServiceImpl implements PmsPortalProductService {
     public List<PromotionProductOutput> getPromotionProductList(List<Long> productIdList) {
         List<PromotionProductOutput> promotionProductList = portalProductDao.getPromotionProductList(productIdList);
         return promotionProductList;
+    }
+
+
+    /**
+     * 锁定下单商品的所有库存
+     *
+     * @param productSkuId
+     * @param quantity
+     * @return
+     */
+    @Override
+    public void lockStock(Long productSkuId, Integer quantity) {
+        PmsSkuStock skuStock = skuStockMapper.selectByPrimaryKey(productSkuId);
+        skuStock.setLockStock(skuStock.getLockStock() + quantity);
+        skuStockMapper.updateByPrimaryKeySelective(skuStock);
     }
 
 

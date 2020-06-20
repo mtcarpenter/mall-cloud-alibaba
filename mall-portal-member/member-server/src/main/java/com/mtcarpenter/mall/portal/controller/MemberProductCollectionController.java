@@ -1,5 +1,6 @@
 package com.mtcarpenter.mall.portal.controller;
 
+import com.mtcarpenter.mall.common.UmsIntegrationConsumeSettingOutput;
 import com.mtcarpenter.mall.common.api.CommonPage;
 import com.mtcarpenter.mall.common.api.CommonResult;
 import com.mtcarpenter.mall.portal.domain.MemberProductCollection;
@@ -51,7 +52,17 @@ public class MemberProductCollectionController {
     @ResponseBody
     public CommonResult<CommonPage<MemberProductCollection>> list(@RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,
                                                                   @RequestParam(value = "pageSize", defaultValue = "5") Integer pageSize) {
-        Page<MemberProductCollection> page = memberCollectionService.list(pageNum,pageSize);
+        Page<MemberProductCollection> page = memberCollectionService.list(pageNum, pageSize);
         return CommonResult.success(CommonPage.restPage(page));
     }
+
+
+    @ApiOperation("获取积分使用规则")
+    @RequestMapping(value = "/integrationConsumeSetting", method = RequestMethod.GET)
+    @ResponseBody
+    public CommonResult<UmsIntegrationConsumeSettingOutput> integrationConsumeSetting(@RequestParam(value = "id", defaultValue = "1") Long id) {
+        UmsIntegrationConsumeSettingOutput integrationConsumeSetting = memberCollectionService.integrationConsumeSetting(id);
+        return CommonResult.success(integrationConsumeSetting);
+    }
+
 }
