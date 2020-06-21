@@ -1,5 +1,5 @@
 server:
-  port: 8071
+  port: 8072
 spring:
   profiles:
     active: dev #默认为开发环境
