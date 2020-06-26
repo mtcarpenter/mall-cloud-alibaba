@@ -179,7 +179,7 @@ public class PmsProductServiceImpl implements PmsProductService {
         //关联专题
         cmsSubjectProductRelationClient.relateAndUpdateList(productParam.getSubjectProductRelationList(), id);
         //关联优选
-        cmsPrefrenceAreaProductRelationClient.relateAndUpdateList(productParam.getSubjectProductRelationList(), id);
+        cmsPrefrenceAreaProductRelationClient.relateAndUpdateList(productParam.getPrefrenceAreaProductRelationList(), id);
         count = 1;
         return count;
     }

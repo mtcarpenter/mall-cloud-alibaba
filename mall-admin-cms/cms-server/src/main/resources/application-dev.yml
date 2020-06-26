@@ -48,7 +48,6 @@ mybatis:
   mapper-locations:
     - classpath:dao/*.xml
     - classpath*:com/**/mapper/*.xml
-    -
 logging:
   level:
     root: info #日志配置DEBUG,INFO,WARN,ERROR

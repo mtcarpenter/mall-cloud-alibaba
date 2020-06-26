@@ -26,12 +26,13 @@ public interface CmsPrefrenceAreaProductRelationClient {
 
 
     /**
-     *  批量更新关联商品
+     * 批量更新关联商品
+     *
      * @param productRelationInputs
      * @param productId
      */
     @RequestMapping(value = "/relateAndUpdateList", method = RequestMethod.POST)
-    void relateAndUpdateList(@RequestBody List<CmsSubjectProductRelationInput> productRelationInputs , @RequestParam("productId") Long productId );
+    void relateAndUpdateList(@RequestBody List<CmsPrefrenceAreaProductRelationInput> productRelationInputs, @RequestParam("productId") Long productId);
 
 
     /**
