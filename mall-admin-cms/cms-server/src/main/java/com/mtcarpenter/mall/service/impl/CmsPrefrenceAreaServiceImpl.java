@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
  * Created by macro on 2018/6/1.
  */
 @Service
+@org.apache.dubbo.config.annotation.Service(version = "1.0.0", interfaceName = "cmsPrefrenceAreaService")
 public class CmsPrefrenceAreaServiceImpl implements CmsPrefrenceAreaService {
     @Autowired
     private CmsPrefrenceAreaMapper prefrenceAreaMapper;

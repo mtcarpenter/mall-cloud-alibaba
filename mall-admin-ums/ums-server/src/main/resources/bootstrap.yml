@@ -3,14 +3,26 @@ server:
 spring:
   profiles:
     # dev 默认为开发环境 , prod 线上环境
-    active: prod
+    active: dev
   application:
     name: mall-admin-ums
   cloud:
     nacos:
       discovery:
         server-addr: 127.0.0.1:8848
-      config:
-        server-addr: 127.0.0.1:8848
-        prefix: mall-admin-ums
-        file-extension: yaml
+#      config:
+#        server-addr: 127.0.0.1:8848
+#        prefix: mall-admin-ums
+#        file-extension: yaml
+
+dubbo:
+  registry:
+    # Dubbo 服务注册中心配置
+    address: nacos://127.0.0.1:8848
+  protocol:
+    # Dubbo Protocol 协议
+    name: dubbo
+    # -1 则会分配一个没有被占用的端口 dubbo 协议缺省端口为 20880
+    port: -1
+  consumer:
+    check: false

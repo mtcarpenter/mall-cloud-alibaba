@@ -15,11 +15,6 @@
         <module>mall-admin-sms</module>
         <module>mall-storage</module>
         <module>mall-monitor</module>
-        <module>mall-portal-member</module>
-        <module>mall-portal-coupon</module>
-        <module>mall-portal-order</module>
-        <module>mall-portal-product</module>
-        <module>mall-portal-content</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>

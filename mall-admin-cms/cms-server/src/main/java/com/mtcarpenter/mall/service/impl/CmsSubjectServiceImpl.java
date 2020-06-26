@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
  * Created by macro on 2018/6/1.
  */
 @Service
+@org.apache.dubbo.config.annotation.Service(version = "1.0.0")
 public class CmsSubjectServiceImpl implements CmsSubjectService {
     @Autowired
     private CmsSubjectMapper subjectMapper;
@@ -77,6 +78,17 @@ public class CmsSubjectServiceImpl implements CmsSubjectService {
             return cmsSubjectProductRelationInput;
         }).collect(Collectors.toList());
         return productRelationInputs;
+    }
+
+    /**
+     * cms test
+     *
+     * @param name
+     * @return
+     */
+    @Override
+    public String cmsTest(String name) {
+        return "name";
     }
 
 

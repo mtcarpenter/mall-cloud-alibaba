@@ -12,5 +12,16 @@ spring:
         server-addr: 127.0.0.1:8848
       config:
         server-addr: 127.0.0.1:8848
-#        prefix: mall-admin-oms
+        prefix: mall-admin-oms
         file-extension: yaml
+dubbo:
+  registry:
+    # Dubbo 服务注册中心配置
+    address: nacos://127.0.0.1:8848
+  protocol:
+    # Dubbo Protocol 协议
+    name: dubbo
+    # -1 则会分配一个没有被占用的端口 dubbo 协议缺省端口为 20880
+    port: -1
+  consumer:
+    check: false

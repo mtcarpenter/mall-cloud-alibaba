@@ -3,16 +3,27 @@ server:
 spring:
   profiles:
     # dev 默认为开发环境 , prod 线上环境
-    active: prod
+    active: dev
   application:
     name: mall-admin-pms
   cloud:
     nacos:
       discovery:
         server-addr: 127.0.0.1:8848
-      config:
-        server-addr: 127.0.0.1:8848
-        prefix: mall-admin-pms
-        file-extension: yaml
+  #      config:
+  #        server-addr: 127.0.0.1:8848
+  #        prefix: mall-admin-pms
+  #        file-extension: yaml
   main:
     allow-bean-definition-overriding: true
+dubbo:
+  registry:
+    # Dubbo 服务注册中心配置
+    address: nacos://127.0.0.1:8848
+  protocol:
+    name: dubbo
+    port: -1
+  consumer:
+    check: false
+  cloud:
+    subscribed-services: 'mall-admin-cms'
