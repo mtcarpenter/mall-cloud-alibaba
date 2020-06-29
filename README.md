@@ -42,7 +42,12 @@ all-cloud-alibaba
 ├─mall-admin-pms -- 商品管理模块服务，端口 8083
 ├─mall-admin-sms -- 营销管理模块服务，端口 8082
 ├─mall-admin-ums -- 会员管理模块服务，端口 8081
-└─mall-storage   --  文件存储服务,端口 8086
+├─mall-storage   --  文件存储服务,端口 8086
+├─mall-portal-content   --  内容模块服务,端口 8073
+├─mall-portal-coupon    --  营销模块服务,端口 8074
+├─mall-portal-member    --  会员模块服务,端口 8070
+├─mall-portal-order     --  会员模块服务,端口 8072
+└─mall-portal-product   --  商品模块服务,端口 8071
 ```
 
 ## mall实现的功能概览
