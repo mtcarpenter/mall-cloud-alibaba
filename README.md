@@ -31,7 +31,7 @@ mall-cloud-alibaba 是一套基于开源商城 mall 改造的 spring cloud aliba
 ## 组织架构
 
 ```
-all-cloud-alibaba
+mall-cloud-alibaba
 ├─mall-common    -- 工具类及通用代码
 ├─mall-mbg MBG   -- 代码生成器
 ├─mall-security  -- Spring Security 公共配置类
@@ -49,8 +49,20 @@ all-cloud-alibaba
 ├─mall-portal-order     --  会员模块服务,端口 8072
 └─mall-portal-product   --  商品模块服务,端口 8071
 ```
+## Dubbo 版本
+
+### 下载源码
+
+```bash
+# 1、克隆 mall-cloud-alibaba 项目
+git clone git@github.com:mtcarpenter/mall-cloud-alibaba.git
+# 2、切换dubbo 分支
+git checkout dubbo
+
+```
 
 ## mall实现的功能概览
+
 - 商品模块  
     - 商品管理
     - 商品分类管理
