@@ -23,7 +23,7 @@ mall-cloud-alibaba 是一套基于开源商城 mall 改造的 spring cloud aliba
 - 服务调用：Spring cloud open-Feign
 - 负载均衡：Spring cloud loadbalancer
 - 链路追踪：zipkin - sleuth
-- 权限认证：Spring secruity 
+- 权限认证：Spring security 
 - 熔断降级：Sentinel
 - 消息队列：RabbitMQ 
 - 项目部署：Docker
