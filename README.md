@@ -23,7 +23,7 @@ mall-cloud-alibaba 是一套基于开源商城 mall 改造的 spring cloud aliba
 - 服务调用：Spring cloud open-Feign
 - 负载均衡：Spring cloud loadbalancer
 - 链路追踪：zipkin - sleuth
-- 权限认证：Spring secruity 
+- 权限认证：Spring security 
 - 熔断降级：Sentinel
 - 消息队列：RabbitMQ 
 - 项目部署：Docker
@@ -31,7 +31,7 @@ mall-cloud-alibaba 是一套基于开源商城 mall 改造的 spring cloud aliba
 ## 组织架构
 
 ```
-all-cloud-alibaba
+mall-cloud-alibaba
 ├─mall-common    -- 工具类及通用代码
 ├─mall-mbg MBG   -- 代码生成器
 ├─mall-security  -- Spring Security 公共配置类
@@ -42,10 +42,27 @@ all-cloud-alibaba
 ├─mall-admin-pms -- 商品管理模块服务，端口 8083
 ├─mall-admin-sms -- 营销管理模块服务，端口 8082
 ├─mall-admin-ums -- 会员管理模块服务，端口 8081
-└─mall-storage   --  文件存储服务,端口 8086
+├─mall-storage   --  文件存储服务,端口 8086
+├─mall-portal-content   --  内容模块服务,端口 8073
+├─mall-portal-coupon    --  营销模块服务,端口 8074
+├─mall-portal-member    --  会员模块服务,端口 8070
+├─mall-portal-order     --  会员模块服务,端口 8072
+└─mall-portal-product   --  商品模块服务,端口 8071
+```
+## Dubbo 版本
+
+### 下载源码
+
+```bash
+# 1、克隆 mall-cloud-alibaba 项目
+git clone git@github.com:mtcarpenter/mall-cloud-alibaba.git
+# 2、切换dubbo 分支
+git checkout dubbo
+
 ```
 
 ## mall实现的功能概览
+
 - 商品模块  
     - 商品管理
     - 商品分类管理
