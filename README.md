@@ -13,6 +13,7 @@ mall-cloud-alibaba 是一套基于开源商城 mall 改造的 spring cloud aliba
 
 ## 演示地址
 前端代码地址：https://github.com/mtcarpenter/mall-admin-web
+
 演示地址：http://148.70.69.18:8090 用户名:admin 密码:123456
 
 ## 技术栈
