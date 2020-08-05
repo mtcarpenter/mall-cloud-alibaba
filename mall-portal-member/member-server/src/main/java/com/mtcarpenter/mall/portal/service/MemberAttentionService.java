@@ -22,4 +22,16 @@ public interface MemberAttentionService {
      * 获取用户关注列表
      */
     Page<MemberBrandAttention> list(Integer pageNum, Integer pageSize);
+
+    /**
+     * 显示关注品牌详情
+     * @param brandId
+     * @return
+     */
+    MemberBrandAttention detail(Long brandId);
+
+    /**
+     * 清空关注列表
+     */
+    void clear();
 }

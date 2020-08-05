@@ -22,4 +22,17 @@ public interface MemberCollectionService {
      * @return
      */
     UmsIntegrationConsumeSetting integrationConsumeSetting(Long id);
+
+    /**
+     * 显示收藏商品详情
+     * @param productId
+     * @return
+     */
+    MemberProductCollection detail(Long productId);
+
+    /**
+     * 清空收藏列表
+     */
+    void clear();
+
 }

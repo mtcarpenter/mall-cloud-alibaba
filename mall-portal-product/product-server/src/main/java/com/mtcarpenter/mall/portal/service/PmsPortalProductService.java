@@ -53,4 +53,12 @@ public interface PmsPortalProductService {
      * @return
      */
     void lockStock(Long productSkuId, Integer quantity);
+
+    /**
+     * 获取商品详情
+     * @param productId
+     * @return
+     */
+    PmsProduct getPmsProductById(Long productId);
+
 }

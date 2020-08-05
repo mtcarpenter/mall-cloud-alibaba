@@ -62,6 +62,15 @@ public class PmsPortalProductController {
     }
 
 
+
+    @ApiOperation("获取商品详情")
+    @RequestMapping(value = "/getPmsProductById/{productId}", method = RequestMethod.GET)
+    @ResponseBody
+    public CommonResult<PmsProduct> getPmsProductById(@PathVariable Long productId) {
+        PmsProduct pmsProduct = portalProductService.getPmsProductById(productId);
+        return CommonResult.success(pmsProduct);
+    }
+
     @ApiOperation("获取购物车中某个商品的规格,用于重选规格")
     @RequestMapping(value = "/getProduct/{productId}", method = RequestMethod.GET)
     @ResponseBody

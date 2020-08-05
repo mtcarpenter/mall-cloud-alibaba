@@ -13,6 +13,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+
 /**
  * 会员收藏Service实现类
  * Created by macro on 2018/8/2.
@@ -34,6 +36,7 @@ public class MemberCollectionServiceImpl implements MemberCollectionService {
         productCollection.setMemberId(member.getId());
         productCollection.setMemberNickname(member.getNickname());
         productCollection.setMemberIcon(member.getIcon());
+        productCollection.setCreateTime(new Date());
         MemberProductCollection findCollection = productCollectionRepository.findByMemberIdAndProductId(productCollection.getMemberId(), productCollection.getProductId());
         if (findCollection == null) {
             productCollectionRepository.save(productCollection);
@@ -64,5 +67,26 @@ public class MemberCollectionServiceImpl implements MemberCollectionService {
     @Override
     public UmsIntegrationConsumeSetting integrationConsumeSetting(Long id) {
         return integrationConsumeSettingMapper.selectByPrimaryKey(id);
+    }
+
+    /**
+     * 显示收藏商品详情
+     *
+     * @param productId
+     * @return
+     */
+    @Override
+    public MemberProductCollection detail(Long productId) {
+        UmsMember member = memberService.getCurrentMember();
+        return productCollectionRepository.findByMemberIdAndProductId(member.getId(), productId);
+    }
+
+    /**
+     * 清空收藏列表
+     */
+    @Override
+    public void clear() {
+        UmsMember member = memberService.getCurrentMember();
+        productCollectionRepository.deleteAllByMemberId(member.getId());
     }
 }

@@ -49,4 +49,25 @@ public class MemberAttentionServiceImpl implements MemberAttentionService {
         Pageable pageable = PageRequest.of(pageNum-1,pageSize);
         return memberBrandAttentionRepository.findByMemberId(member.getId(),pageable);
     }
+
+    /**
+     * 显示关注品牌详情
+     *
+     * @param brandId
+     * @return
+     */
+    @Override
+    public MemberBrandAttention detail(Long brandId) {
+        UmsMember member = memberService.getCurrentMember();
+        return memberBrandAttentionRepository.findByMemberIdAndBrandId(member.getId(), brandId);
+    }
+
+    /**
+     * 清空关注列表
+     */
+    @Override
+    public void clear() {
+        UmsMember member = memberService.getCurrentMember();
+        memberBrandAttentionRepository.deleteAllByMemberId(member.getId());
+    }
 }

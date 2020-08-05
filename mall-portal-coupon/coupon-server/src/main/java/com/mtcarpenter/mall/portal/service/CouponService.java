@@ -30,7 +30,7 @@ public interface CouponService {
      * @param useStatus
      * @return
      */
-    List<SmsCouponHistory> list(Long memberId, Integer useStatus);
+    List<SmsCoupon> list(Long memberId, Integer useStatus);
 
     /**
      * 获取登录会员购物车的相关优惠券
@@ -85,4 +85,19 @@ public interface CouponService {
      * @return
      */
     SmsFlashPromotionSession getFlashPromotionSession(Date date);
+
+    /**
+     *获取优惠券历史列表
+     * @param memberId
+     * @param useStatus
+     * @return
+     */
+    List<SmsCouponHistory> listHistory(Long memberId, Integer useStatus);
+
+    /**
+     *获取当前商品相关优惠券
+     * @param productId
+     * @return
+     */
+    List<SmsCoupon> listByProduct(Long productId);
 }

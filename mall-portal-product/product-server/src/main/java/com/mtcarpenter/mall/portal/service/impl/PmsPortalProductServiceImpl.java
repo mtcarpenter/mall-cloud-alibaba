@@ -169,6 +169,17 @@ public class PmsPortalProductServiceImpl implements PmsPortalProductService {
         skuStockMapper.updateByPrimaryKeySelective(skuStock);
     }
 
+    /**
+     * 获取商品详情
+     *
+     * @param productId
+     * @return
+     */
+    @Override
+    public PmsProduct getPmsProductById(Long productId) {
+        return productMapper.selectByPrimaryKey(productId);
+    }
+
 
     /**
      * 初始对象转化为节点对象

@@ -55,4 +55,13 @@ public class MemberReadHistoryServiceImpl implements MemberReadHistoryService {
         Pageable pageable = PageRequest.of(pageNum-1, pageSize);
         return memberReadHistoryRepository.findByMemberIdOrderByCreateTimeDesc(member.getId(),pageable);
     }
+
+    /**
+     * 清空浏览记录
+     */
+    @Override
+    public void clear() {
+        UmsMember member = memberService.getCurrentMember();
+        memberReadHistoryRepository.deleteAllByMemberId(member.getId());
+    }
 }

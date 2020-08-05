@@ -3,6 +3,7 @@ package com.mtcarpenter.mall.client;
 import com.mtcarpenter.mall.common.api.CommonResult;
 import com.mtcarpenter.mall.domain.CartProduct;
 import com.mtcarpenter.mall.domain.PromotionProduct;
+import com.mtcarpenter.mall.model.PmsProduct;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
@@ -45,5 +46,14 @@ public interface ProductFeign {
      * @return
      */
     @RequestMapping(value = "/lockStock", method = RequestMethod.POST)
-    public CommonResult lockStock(@RequestParam(required = false) Long productSkuId, @RequestParam(required = false) Integer quantity);
+    CommonResult lockStock(@RequestParam(required = false) Long productSkuId, @RequestParam(required = false) Integer quantity);
+
+    /**
+     * 获取商品详情
+     *
+     * @param productId
+     * @return
+     */
+    @RequestMapping(value = "/getPmsProductById/{productId}", method = RequestMethod.GET)
+    CommonResult<PmsProduct> getPmsProductById(@PathVariable Long productId);
 }

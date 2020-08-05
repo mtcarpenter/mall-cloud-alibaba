@@ -11,4 +11,6 @@ import org.springframework.data.mongodb.repository.MongoRepository;
  */
 public interface MemberReadHistoryRepository extends MongoRepository<MemberReadHistory,String> {
     Page<MemberReadHistory> findByMemberIdOrderByCreateTimeDesc(Long memberId, Pageable pageable);
+
+    void deleteAllByMemberId(Long id);
 }

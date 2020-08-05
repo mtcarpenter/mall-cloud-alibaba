@@ -2,6 +2,7 @@ package com.mtcarpenter.mall.portal.controller;
 
 import com.mtcarpenter.mall.common.api.CommonResult;
 import com.mtcarpenter.mall.domain.SmsCouponHistoryDetail;
+import com.mtcarpenter.mall.model.SmsCoupon;
 import com.mtcarpenter.mall.model.SmsCouponHistory;
 import com.mtcarpenter.mall.portal.service.UmsMemberCouponService;
 import com.mtcarpenter.mall.portal.service.UmsMemberService;
@@ -34,6 +35,15 @@ public class UmsMemberCouponController {
     public CommonResult add(@PathVariable Long couponId) {
         memberCouponService.add(couponId);
         return CommonResult.success(null, "领取成功");
+    }
+    @ApiOperation("获取用户优惠券历史列表")
+    @ApiImplicitParam(name = "useStatus", value = "优惠券筛选类型:0->未使用；1->已使用；2->已过期",
+            allowableValues = "0,1,2", paramType = "query", dataType = "integer")
+    @RequestMapping(value = "/listHistory", method = RequestMethod.GET)
+    @ResponseBody
+    public CommonResult<List<SmsCoupon>> listHistory(@RequestParam(value = "useStatus", required = false) Integer useStatus) {
+        List<SmsCoupon> couponHistoryList = memberCouponService.listHistory(useStatus);
+        return CommonResult.success(couponHistoryList);
     }
 
 

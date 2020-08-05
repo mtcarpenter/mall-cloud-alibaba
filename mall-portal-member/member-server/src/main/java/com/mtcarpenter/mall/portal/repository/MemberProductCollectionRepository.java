@@ -13,4 +13,6 @@ public interface MemberProductCollectionRepository extends MongoRepository<Membe
     MemberProductCollection findByMemberIdAndProductId(Long memberId, Long productId);
     int deleteByMemberIdAndProductId(Long memberId,Long productId);
     Page<MemberProductCollection> findByMemberId(Long memberId, Pageable pageable);
+
+    void deleteAllByMemberId(Long id);
 }

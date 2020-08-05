@@ -1,6 +1,8 @@
 package com.mtcarpenter.mall.portal.service.impl;
 
 
+import cn.hutool.core.collection.CollUtil;
+import com.mtcarpenter.mall.client.ProductFeign;
 import com.mtcarpenter.mall.common.exception.Asserts;
 import com.mtcarpenter.mall.domain.CartPromotionItem;
 import com.mtcarpenter.mall.domain.SmsCouponHistoryDetail;
@@ -15,7 +17,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 /**
@@ -40,6 +45,15 @@ public class CouponServiceImpl implements CouponService {
     private SmsFlashPromotionSessionMapper promotionSessionMapper;
     @Autowired
     private SmsFlashPromotionMapper flashPromotionMapper;
+
+    @Autowired
+    private SmsCouponProductRelationMapper couponProductRelationMapper;
+
+    @Autowired
+    private SmsCouponProductCategoryRelationMapper couponProductCategoryRelationMapper;
+
+    @Autowired
+    private ProductFeign productFeign;
 
 
     @Override
@@ -90,15 +104,8 @@ public class CouponServiceImpl implements CouponService {
      * @return
      */
     @Override
-    public List<SmsCouponHistory> list(Long memberId, Integer useStatus) {
-        SmsCouponHistoryExample couponHistoryExample = new SmsCouponHistoryExample();
-        SmsCouponHistoryExample.Criteria criteria = couponHistoryExample.createCriteria();
-        criteria.andMemberIdEqualTo(memberId);
-        if (useStatus != null) {
-            criteria.andUseStatusEqualTo(useStatus);
-        }
-        List<SmsCouponHistory> smsCouponHistories = couponHistoryMapper.selectByExample(couponHistoryExample);
-        return smsCouponHistories;
+    public List<SmsCoupon> list(Long memberId, Integer useStatus) {
+        return couponHistoryDao.getCouponList(memberId, useStatus);
     }
 
     /**
@@ -284,6 +291,66 @@ public class CouponServiceImpl implements CouponService {
             return promotionSessionList.get(0);
         }
         return null;
+    }
+
+    /**
+     * 获取优惠券历史列表
+     *
+     * @param memberId
+     * @param useStatus
+     * @return
+     */
+    @Override
+    public List<SmsCouponHistory> listHistory(Long memberId, Integer useStatus) {
+        SmsCouponHistoryExample couponHistoryExample = new SmsCouponHistoryExample();
+        SmsCouponHistoryExample.Criteria criteria = couponHistoryExample.createCriteria();
+        criteria.andMemberIdEqualTo(memberId);
+        if (useStatus != null) {
+            criteria.andUseStatusEqualTo(useStatus);
+        }
+        return couponHistoryMapper.selectByExample(couponHistoryExample);
+    }
+
+    /**
+     * 获取当前商品相关优惠券
+     *
+     * @param productId
+     * @return
+     */
+    @Override
+    public List<SmsCoupon> listByProduct(Long productId) {
+        List<Long> allCouponIds = new ArrayList<>();
+        //获取指定商品优惠券
+        SmsCouponProductRelationExample cprExample = new SmsCouponProductRelationExample();
+        cprExample.createCriteria().andProductIdEqualTo(productId);
+        List<SmsCouponProductRelation> cprList = couponProductRelationMapper.selectByExample(cprExample);
+        if(CollUtil.isNotEmpty(cprList)){
+            List<Long> couponIds = cprList.stream().map(SmsCouponProductRelation::getCouponId).collect(Collectors.toList());
+            allCouponIds.addAll(couponIds);
+        }
+        //获取指定分类优惠券
+        PmsProduct product = productFeign.getPmsProductById(productId).getData();
+        SmsCouponProductCategoryRelationExample cpcrExample = new SmsCouponProductCategoryRelationExample();
+        cpcrExample.createCriteria().andProductCategoryIdEqualTo(product.getProductCategoryId());
+        List<SmsCouponProductCategoryRelation> cpcrList = couponProductCategoryRelationMapper.selectByExample(cpcrExample);
+        if(CollUtil.isNotEmpty(cpcrList)){
+            List<Long> couponIds = cpcrList.stream().map(SmsCouponProductCategoryRelation::getCouponId).collect(Collectors.toList());
+            allCouponIds.addAll(couponIds);
+        }
+        if(CollUtil.isEmpty(allCouponIds)){
+            return new ArrayList<>();
+        }
+        //所有优惠券
+        SmsCouponExample couponExample = new SmsCouponExample();
+        couponExample.createCriteria().andEndTimeGreaterThan(new Date())
+                .andStartTimeLessThan(new Date())
+                .andUseTypeEqualTo(0);
+        couponExample.or(couponExample.createCriteria()
+                .andEndTimeGreaterThan(new Date())
+                .andStartTimeLessThan(new Date())
+                .andUseTypeNotEqualTo(0)
+                .andIdIn(allCouponIds));
+        return couponMapper.selectByExample(couponExample);
     }
 
 

@@ -21,7 +21,7 @@ import java.util.List;
  * @desc 微信公众号：山间木匠
  */
 @RestController
-@RequestMapping("//coupon")
+@RequestMapping("/coupon")
 @Api(tags = "用户优惠券管理")
 public class CouponController {
 
@@ -40,13 +40,24 @@ public class CouponController {
         return CommonResult.success(null, "领取成功");
     }
 
+    @ApiOperation("获取用户优惠券历史列表")
+    @ApiImplicitParam(name = "useStatus", value = "优惠券筛选类型:0->未使用；1->已使用；2->已过期",
+            allowableValues = "0,1,2", paramType = "query", dataType = "integer")
+    @RequestMapping(value = "/listHistory", method = RequestMethod.GET)
+    @ResponseBody
+    public CommonResult<List<SmsCouponHistory>> listHistory(@RequestParam(value = "memberId", required = false) Long memberId,
+                                                            @RequestParam(value = "useStatus", required = false) Integer useStatus) {
+        List<SmsCouponHistory> couponHistoryList = couponService.listHistory(memberId,useStatus);
+        return CommonResult.success(couponHistoryList);
+    }
+
     @ApiOperation("获取用户优惠券列表")
     @ApiImplicitParam(name = "useStatus", value = "优惠券筛选类型:0->未使用；1->已使用；2->已过期",
             allowableValues = "0,1,2", paramType = "query", dataType = "integer")
     @RequestMapping(value = "/list", method = RequestMethod.GET)
-    public CommonResult<List<SmsCouponHistory>> list(@RequestParam(value = "memberId", required = false) Long memberId,
+    public CommonResult<List<SmsCoupon>> list(@RequestParam(value = "memberId", required = false) Long memberId,
                                                      @RequestParam(value = "useStatus", required = false) Integer useStatus) {
-        List<SmsCouponHistory> couponHistoryList = couponService.list(memberId, useStatus);
+        List<SmsCoupon> couponHistoryList = couponService.list(memberId, useStatus);
         return CommonResult.success(couponHistoryList);
     }
 
@@ -131,7 +142,6 @@ public class CouponController {
     }
 
 
-
     /**
      * 根据时间获取秒杀活动
      *
@@ -156,6 +166,14 @@ public class CouponController {
     public CommonResult<SmsFlashPromotionSession> getFlashPromotionSession(@RequestParam(value = "date") Date date) {
         SmsFlashPromotionSession smsFlashPromotion = couponService.getFlashPromotionSession(date);
         return CommonResult.success(smsFlashPromotion);
+    }
+
+    @ApiOperation("获取当前商品相关优惠券")
+    @RequestMapping(value = "/listByProduct/{productId}", method = RequestMethod.GET)
+    @ResponseBody
+    public CommonResult<List<SmsCoupon>> listByProduct(@PathVariable Long productId) {
+        List<SmsCoupon> couponHistoryList = couponService.listByProduct(productId);
+        return CommonResult.success(couponHistoryList);
     }
 
 }
