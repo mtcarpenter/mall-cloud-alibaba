@@ -4,7 +4,7 @@ import com.mtcarpenter.mall.portal.domain.MemberBrandAttention;
 import org.springframework.data.domain.Page;
 
 /**
- * 会员关注Service
+ * 会员品牌关注管理Service
  * Created by macro on 2018/8/2.
  */
 public interface MemberAttentionService {

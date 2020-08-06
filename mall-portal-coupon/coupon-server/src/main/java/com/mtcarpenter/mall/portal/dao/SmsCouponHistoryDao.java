@@ -14,6 +14,12 @@ import java.util.List;
 public interface SmsCouponHistoryDao {
     List<SmsCouponHistoryDetail> getDetailList(@Param("memberId") Long memberId);
 
+    /**
+     * 获取可用优惠券列表
+     * @param productId
+     * @param productCategoryId
+     * @return
+     */
     List<SmsCoupon> getAvailableCouponList(@Param("productId") Long productId,@Param("productCategoryId") Long productCategoryId);
 
     /**

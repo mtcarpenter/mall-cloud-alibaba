@@ -4,7 +4,7 @@ package com.mtcarpenter.mall.controller;
 import com.mtcarpenter.mall.common.api.CommonResult;
 import com.mtcarpenter.mall.dto.OssCallbackResult;
 import com.mtcarpenter.mall.dto.OssPolicyResult;
-import com.mtcarpenter.mall.service.impl.OssServiceImpl;
+import com.mtcarpenter.mall.service.OssService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping("/aliyun/oss")
 public class OssController {
     @Autowired
-    private OssServiceImpl ossService;
+    private OssService ossService;
 
     @ApiOperation(value = "oss上传签名生成")
     @RequestMapping(value = "/policy", method = RequestMethod.GET)

@@ -5,14 +5,30 @@ import com.mtcarpenter.mall.portal.domain.MemberProductCollection;
 import org.springframework.data.domain.Page;
 
 /**
- * 会员收藏Service
+ * 会员商品收藏管理Service
  * Created by macro on 2018/8/2.
  */
 public interface MemberCollectionService {
+    /**
+     * 添加收藏
+     * @param productCollection
+     * @return
+     */
     int add(MemberProductCollection productCollection);
 
+    /**
+     * 删除收藏
+     * @param productId
+     * @return
+     */
     int delete(Long productId);
 
+    /**
+     * 分页查询收藏
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
     Page<MemberProductCollection> list(Integer pageNum, Integer pageSize);
 
     /**
