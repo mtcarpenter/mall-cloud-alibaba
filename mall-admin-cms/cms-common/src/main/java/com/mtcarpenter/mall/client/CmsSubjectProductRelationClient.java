@@ -20,7 +20,7 @@ public interface CmsSubjectProductRelationClient {
      * @param productRelationInputs
      */
     @RequestMapping(value = "/relateAndInsertList", method = RequestMethod.POST)
-    void relateAndInsertList(@RequestBody List<CmsSubjectProductRelationInput> productRelationInputs, @RequestParam("productId") Long productId);
+    CommonResult relateAndInsertList(@RequestBody List<CmsSubjectProductRelationInput> productRelationInputs, @RequestParam("productId") Long productId);
 
     /**
      * 批量更新关联优选
@@ -28,7 +28,7 @@ public interface CmsSubjectProductRelationClient {
      * @param productId
      */
     @RequestMapping(value = "/relateAndUpdateList", method = RequestMethod.POST)
-    void relateAndUpdateList(@RequestBody List<CmsSubjectProductRelationInput> productRelationInputs,@RequestParam("productId") Long productId);
+    CommonResult relateAndUpdateList(@RequestBody List<CmsSubjectProductRelationInput> productRelationInputs,@RequestParam("productId") Long productId);
 
 
     /**
