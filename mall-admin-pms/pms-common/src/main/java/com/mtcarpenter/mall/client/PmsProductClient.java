@@ -13,9 +13,15 @@ import org.springframework.web.bind.annotation.RequestParam;
  * @github https://github.com/mtcarpenter/mall-cloud-alibaba
  * @desc 微信公众号：山间木匠
  */
-@FeignClient(name = "mall-admin-pms",path = "product")
+@FeignClient(name = "mall-admin-pms", path = "product")
 public interface PmsProductClient {
 
+    /**
+     * 通过id查询商品信息
+     *
+     * @param productId
+     * @return
+     */
     @RequestMapping(value = "/getProductByProductId", method = RequestMethod.GET)
     CommonResult<PmsProductOutput> getProductByProductId(@RequestParam("productId") Long productId);
 
