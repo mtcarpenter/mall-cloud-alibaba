@@ -19,10 +19,11 @@ public interface SubjectFeign {
 
     /**
      * 获取推荐专题
+     *
      * @param offset
      * @param limit
      * @return
      */
     @RequestMapping(value = "/member/subject/getRecommendSubjectList", method = RequestMethod.GET)
-    public CommonResult<List<CmsSubject>> getRecommendSubjectList(@RequestParam("offset") Integer offset, @RequestParam("limit") Integer limit);
-    }
+    CommonResult<List<CmsSubject>> getRecommendSubjectList(@RequestParam("offset") Integer offset, @RequestParam("limit") Integer limit);
+}
