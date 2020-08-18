@@ -5,10 +5,11 @@ import com.mtcarpenter.mall.model.CmsSubject;
 import com.mtcarpenter.mall.portal.service.SubjectService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -29,7 +30,7 @@ public class SubjectController {
     @ApiOperation("获取推荐专题")
     @RequestMapping(value = "/getRecommendSubjectList", method = RequestMethod.GET)
     public CommonResult<List<CmsSubject>> getRecommendSubjectList(@RequestParam("offset") Integer offset, @RequestParam("limit") Integer limit) {
-        List<CmsSubject> cmsSubjects = subjectService.getRecommendSubjectList(offset,limit);
+        List<CmsSubject> cmsSubjects = subjectService.getRecommendSubjectList(offset, limit);
         return CommonResult.success(cmsSubjects);
     }
 
