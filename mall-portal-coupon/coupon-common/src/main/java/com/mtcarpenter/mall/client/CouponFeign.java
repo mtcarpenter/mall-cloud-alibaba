@@ -4,8 +4,6 @@ import com.mtcarpenter.mall.common.api.CommonResult;
 import com.mtcarpenter.mall.domain.CartPromotionItem;
 import com.mtcarpenter.mall.domain.SmsCouponHistoryDetail;
 import com.mtcarpenter.mall.model.*;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiOperation;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,6 +31,7 @@ public interface CouponFeign {
 
     /**
      * 获取用户优惠券历史列表
+     *
      * @param memberId
      * @param useStatus
      * @return
@@ -51,7 +50,7 @@ public interface CouponFeign {
      */
     @GetMapping(value = "/list")
     CommonResult<List<SmsCoupon>> list(@RequestParam(value = "memberId", required = false) Long memberId,
-                                              @RequestParam(value = "useStatus", required = false) Integer useStatus);
+                                       @RequestParam(value = "useStatus", required = false) Integer useStatus);
 
 
     /**
