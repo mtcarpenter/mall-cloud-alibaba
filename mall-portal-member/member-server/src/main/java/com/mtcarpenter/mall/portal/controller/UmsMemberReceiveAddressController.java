@@ -58,7 +58,7 @@ public class UmsMemberReceiveAddressController {
     @ApiOperation("显示所有收货地址")
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
-    public CommonResult<List<UmsMemberReceiveAddress>> list(@RequestParam(value = "memberId",required = false) Long memberId) {
+    public CommonResult<List<UmsMemberReceiveAddress>> list(@RequestParam(value = "memberId", required = false) Long memberId) {
         List<UmsMemberReceiveAddress> addressList = memberReceiveAddressService.list(memberId);
         return CommonResult.success(addressList);
     }
