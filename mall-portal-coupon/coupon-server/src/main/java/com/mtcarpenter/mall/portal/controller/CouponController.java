@@ -47,7 +47,7 @@ public class CouponController {
     @ResponseBody
     public CommonResult<List<SmsCouponHistory>> listHistory(@RequestParam(value = "memberId", required = false) Long memberId,
                                                             @RequestParam(value = "useStatus", required = false) Integer useStatus) {
-        List<SmsCouponHistory> couponHistoryList = couponService.listHistory(memberId,useStatus);
+        List<SmsCouponHistory> couponHistoryList = couponService.listHistory(memberId, useStatus);
         return CommonResult.success(couponHistoryList);
     }
 
@@ -56,7 +56,7 @@ public class CouponController {
             allowableValues = "0,1,2", paramType = "query", dataType = "integer")
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public CommonResult<List<SmsCoupon>> list(@RequestParam(value = "memberId", required = false) Long memberId,
-                                                     @RequestParam(value = "useStatus", required = false) Integer useStatus) {
+                                              @RequestParam(value = "useStatus", required = false) Integer useStatus) {
         List<SmsCoupon> couponHistoryList = couponService.list(memberId, useStatus);
         return CommonResult.success(couponHistoryList);
     }
