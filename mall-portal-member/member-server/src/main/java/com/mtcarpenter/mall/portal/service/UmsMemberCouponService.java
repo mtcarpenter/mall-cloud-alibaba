@@ -34,7 +34,8 @@ public interface UmsMemberCouponService {
     List<SmsCouponHistoryDetail> listCart(Integer type);
 
     /**
-     *获取优惠券历史列表
+     * 获取优惠券历史列表
+     *
      * @param useStatus
      * @return
      */

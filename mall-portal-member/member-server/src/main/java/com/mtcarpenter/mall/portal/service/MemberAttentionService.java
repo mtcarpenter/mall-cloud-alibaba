@@ -25,6 +25,7 @@ public interface MemberAttentionService {
 
     /**
      * 显示关注品牌详情
+     *
      * @param brandId
      * @return
      */

@@ -52,7 +52,7 @@ public class MemberDetails implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return umsMember.getStatus()==1;
+        return umsMember.getStatus() == 1;
     }
 
     public UmsMember getUmsMember() {

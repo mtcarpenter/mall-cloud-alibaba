@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 public interface MemberCollectionService {
     /**
      * 添加收藏
+     *
      * @param productCollection
      * @return
      */
@@ -18,6 +19,7 @@ public interface MemberCollectionService {
 
     /**
      * 删除收藏
+     *
      * @param productId
      * @return
      */
@@ -25,6 +27,7 @@ public interface MemberCollectionService {
 
     /**
      * 分页查询收藏
+     *
      * @param pageNum
      * @param pageSize
      * @return
@@ -41,6 +44,7 @@ public interface MemberCollectionService {
 
     /**
      * 显示收藏商品详情
+     *
      * @param productId
      * @return
      */

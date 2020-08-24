@@ -9,7 +9,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
  * 会员商品浏览历史Repository
  * Created by macro on 2018/8/3.
  */
-public interface MemberReadHistoryRepository extends MongoRepository<MemberReadHistory,String> {
+public interface MemberReadHistoryRepository extends MongoRepository<MemberReadHistory, String> {
     Page<MemberReadHistory> findByMemberIdOrderByCreateTimeDesc(Long memberId, Pageable pageable);
 
     void deleteAllByMemberId(Long id);

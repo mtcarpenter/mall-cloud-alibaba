@@ -40,14 +40,14 @@ public class MemberAttentionServiceImpl implements MemberAttentionService {
     @Override
     public int delete(Long brandId) {
         UmsMember member = memberService.getCurrentMember();
-        return memberBrandAttentionRepository.deleteByMemberIdAndBrandId(member.getId(),brandId);
+        return memberBrandAttentionRepository.deleteByMemberIdAndBrandId(member.getId(), brandId);
     }
 
     @Override
     public Page<MemberBrandAttention> list(Integer pageNum, Integer pageSize) {
         UmsMember member = memberService.getCurrentMember();
-        Pageable pageable = PageRequest.of(pageNum-1,pageSize);
-        return memberBrandAttentionRepository.findByMemberId(member.getId(),pageable);
+        Pageable pageable = PageRequest.of(pageNum - 1, pageSize);
+        return memberBrandAttentionRepository.findByMemberId(member.getId(), pageable);
     }
 
     /**

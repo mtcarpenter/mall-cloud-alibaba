@@ -55,7 +55,7 @@ public class UmsMemberCacheServiceImpl implements UmsMemberCacheService {
     @Override
     public void setAuthCode(String telephone, String authCode) {
         String key = REDIS_DATABASE + ":" + REDIS_KEY_AUTH_CODE + ":" + telephone;
-        redisService.set(key,authCode,REDIS_EXPIRE_AUTH_CODE);
+        redisService.set(key, authCode, REDIS_EXPIRE_AUTH_CODE);
     }
 
     @CacheException

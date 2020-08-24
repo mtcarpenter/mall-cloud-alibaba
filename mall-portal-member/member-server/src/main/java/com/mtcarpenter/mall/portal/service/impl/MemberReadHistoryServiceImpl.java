@@ -25,6 +25,7 @@ public class MemberReadHistoryServiceImpl implements MemberReadHistoryService {
     private MemberReadHistoryRepository memberReadHistoryRepository;
     @Autowired
     private UmsMemberService memberService;
+
     @Override
     public int create(MemberReadHistory memberReadHistory) {
         UmsMember member = memberService.getCurrentMember();
@@ -40,7 +41,7 @@ public class MemberReadHistoryServiceImpl implements MemberReadHistoryService {
     @Override
     public int delete(List<String> ids) {
         List<MemberReadHistory> deleteList = new ArrayList<>();
-        for(String id:ids){
+        for (String id : ids) {
             MemberReadHistory memberReadHistory = new MemberReadHistory();
             memberReadHistory.setId(id);
             deleteList.add(memberReadHistory);
@@ -52,8 +53,8 @@ public class MemberReadHistoryServiceImpl implements MemberReadHistoryService {
     @Override
     public Page<MemberReadHistory> list(Integer pageNum, Integer pageSize) {
         UmsMember member = memberService.getCurrentMember();
-        Pageable pageable = PageRequest.of(pageNum-1, pageSize);
-        return memberReadHistoryRepository.findByMemberIdOrderByCreateTimeDesc(member.getId(),pageable);
+        Pageable pageable = PageRequest.of(pageNum - 1, pageSize);
+        return memberReadHistoryRepository.findByMemberIdOrderByCreateTimeDesc(member.getId(), pageable);
     }
 
     /**

@@ -44,7 +44,7 @@ public interface UmsMemberService {
     /**
      * 根据会员id修改会员积分
      */
-    void updateIntegration(Long id,Integer integration);
+    void updateIntegration(Long id, Integer integration);
 
 
     /**
