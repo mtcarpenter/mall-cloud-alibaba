@@ -53,7 +53,7 @@
         <logstash-logback.version>5.2</logstash-logback.version>
         <minio.version>3.0.10</minio.version>
         <mall.version>0.0.1-SNAPSHOT</mall.version>
-        <guava.version>25.1-jre</guava.version>
+        <guava.version>29.0-jre</guava.version>
         <spring.boot.admin.version>2.1.6</spring.boot.admin.version>
     </properties>
 
